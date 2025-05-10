@@ -5,13 +5,13 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  SidebarTrigger,
 } from "@/components";
 
 const Navbar = () => {
@@ -19,7 +19,8 @@ const Navbar = () => {
     <nav className="bg-background sticky top-0 z-10 flex items-center justify-between p-4 shadow">
       {/* LEFT */}
       {/* <SidebarTrigger /> */}
-      <Button variant="outline">Custom Button</Button>
+      <SidebarTrigger />
+
       {/* RIGHT */}
       <div className="flex items-center gap-4">
         {/* USER MENU */}
