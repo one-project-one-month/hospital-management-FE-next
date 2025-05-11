@@ -10,3 +10,5 @@ export * from "./skeleton";
 export * from "./sheet";
 export * from "./tooltip";
 export * from "./collapsible";
+export * from "./select";
+export * from "./badge";

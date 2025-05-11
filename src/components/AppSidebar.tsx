@@ -1,3 +1,4 @@
+"use client";
 import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
 import {
   Sidebar,
@@ -14,6 +15,10 @@ import {
 } from "./ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
+import { Badge } from "./ui";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useEffect } from "react";
 
 const items = [
   {
@@ -44,6 +49,12 @@ const items = [
 ];
 
 const AppSidebar = () => {
+  const role = useSelector((state: RootState) => state.auth.role);
+
+  useEffect(() => {
+    console.log(role);
+  }, [role]);
+
   return (
     <Sidebar collapsible="icon">
       {/* Header */}
@@ -58,7 +69,8 @@ const AppSidebar = () => {
                   width={40}
                   height={40}
                 />
-                <span>User</span>
+                <span>Name</span>
+                <Badge>{role || "not user"}</Badge>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

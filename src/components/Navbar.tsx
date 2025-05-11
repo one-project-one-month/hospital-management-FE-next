@@ -13,8 +13,18 @@ import {
   DropdownMenuTrigger,
   SidebarTrigger,
 } from "@/components";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/authSlice";
+import { redirect } from "next/navigation";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+
+  const onLogOut = () => {
+    dispatch(logout());
+    redirect("/login");
+  };
+
   return (
     <nav className="bg-background sticky top-0 z-10 flex items-center justify-between p-4 shadow">
       {/* LEFT */}
@@ -42,7 +52,13 @@ const Navbar = () => {
               <Settings className="mr-2 h-[1.2rem] w-[1.2rem]" />
               Settings
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={(e) => {
+                e.preventDefault();
+                onLogOut();
+              }}
+            >
               <LogOut className="mr-2 h-[1.2rem] w-[1.2rem]" />
               Logout
             </DropdownMenuItem>

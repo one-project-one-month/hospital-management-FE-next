@@ -1,28 +1,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface CounterState {
-  value: number;
+interface UserInterface {
+  role: string | null;
 }
 
-const initialState: CounterState = {
-  value: 0,
+const initialState: UserInterface = {
+  role: null,
 };
 
-export const counterSlice = createSlice({
-  name: "counter",
+export const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    login(state, action: PayloadAction<UserInterface>) {
+      state = { role: action.payload.role };
     },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload;
+    logout(state) {
+      state.role = null;
     },
   },
 });
 
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
-export default counterSlice.reducer;
+export const { login, logout } = authSlice.actions;
+export default authSlice.reducer;
