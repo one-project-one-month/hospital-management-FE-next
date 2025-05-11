@@ -18,7 +18,6 @@ import Image from "next/image";
 import { Badge } from "./ui";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useEffect } from "react";
 
 const items = [
   {
@@ -50,10 +49,6 @@ const items = [
 
 const AppSidebar = () => {
   const role = useSelector((state: RootState) => state.auth.role);
-
-  useEffect(() => {
-    console.log(role);
-  }, [role]);
 
   return (
     <Sidebar collapsible="icon">

@@ -13,7 +13,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action: PayloadAction<UserInterface>) {
-      state = { role: action.payload.role };
+      state.role = action.payload.role;
     },
     logout(state) {
       state.role = null;

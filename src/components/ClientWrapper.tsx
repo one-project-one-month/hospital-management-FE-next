@@ -9,8 +9,8 @@ export default function ClientWrapper({
 }: {
   children: React.ReactNode;
 }) {
+  const hideNavbarRoutes = ["/login", "/register", "/unauthorized"];
   const pathname = usePathname();
-  const hideNavbarRoutes = ["/login", "/register"];
 
   return (
     <>
