@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Input,
@@ -19,9 +18,6 @@ export function LoginForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
-            Login with your Apple or Google account
-          </CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -36,24 +32,26 @@ export function LoginForm({
                   required
                 />
               </div>
+
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a
+                  {/* <a
                     href="#"
                     className="ml-auto text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </a>
+                  </a> */}
                 </div>
                 <Input id="password" type="password" required />
               </div>
+
               <Button type="submit" className="w-full">
                 Login
               </Button>
             </div>
-            <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
+            <div className="mt-2 text-center text-sm">
+              Don&apos;t have an account?
               <a href="#" className="underline underline-offset-4">
                 Sign up
               </a>
