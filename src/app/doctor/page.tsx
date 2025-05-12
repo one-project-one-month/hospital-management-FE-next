@@ -1,5 +1,5 @@
 const DoctorPage = () => {
-  return <div className="">DoctorPage</div>;
+  return <section className="">DoctorPage</section>;
 };
 
 export default DoctorPage;
