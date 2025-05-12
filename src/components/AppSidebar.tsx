@@ -1,14 +1,10 @@
 "use client";
-import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
@@ -19,35 +15,7 @@ import { Badge } from "./ui";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
-const items = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
-
-const AppSidebar = () => {
+const AppSidebar = ({ children }: { children: React.ReactNode }) => {
   const role = useSelector((state: RootState) => state.auth.role);
 
   return (
@@ -73,28 +41,7 @@ const AppSidebar = () => {
       </SidebarHeader>
       <SidebarSeparator />
 
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                  {item.title === "Inbox" && (
-                    <SidebarMenuBadge>24</SidebarMenuBadge>
-                  )}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
+      <SidebarContent>{children}</SidebarContent>
     </Sidebar>
   );
 };
