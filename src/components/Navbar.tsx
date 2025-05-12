@@ -15,14 +15,11 @@ import {
 } from "@/components";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
-import { redirect } from "next/navigation";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-
   const onLogOut = () => {
     dispatch(logout());
-    // redirect("/login");
   };
 
   return (

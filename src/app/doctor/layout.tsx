@@ -11,7 +11,7 @@ import {
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import { RootState } from "@/redux/store";
-import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
+import { Home, Inbox, Calendar } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -19,28 +19,18 @@ import { useSelector } from "react-redux";
 const items = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/doctor/dashboard",
     icon: Home,
   },
   {
-    title: "Inbox",
+    title: "Patients",
     url: "#",
     icon: Inbox,
   },
   {
-    title: "Calendar",
+    title: "Appointments",
     url: "#",
     icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 
