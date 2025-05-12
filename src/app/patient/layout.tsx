@@ -1,4 +1,6 @@
 "use client";
+import AppSidebar from "@/components/AppSidebar";
+import Navbar from "@/components/Navbar";
 import { RootState } from "@/redux/store";
 import { redirect } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -14,5 +16,13 @@ export default function PatientLayout({
     redirect("/unauthorized");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <AppSidebar />
+      <main>
+        <Navbar />
+        {children}
+      </main>
+    </>
+  );
 }
