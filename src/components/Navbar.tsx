@@ -22,7 +22,7 @@ const Navbar = () => {
 
   const onLogOut = () => {
     dispatch(logout());
-    redirect("/login");
+    // redirect("/login");
   };
 
   return (
