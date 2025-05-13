@@ -121,6 +121,14 @@
   }
 }
 
+section {
+  @apply w-full p-5;
+}
+
+main {
+  @apply mt-25;
+}
+
 @utility flex-center {
   @apply flex items-center justify-center;
 }

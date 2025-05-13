@@ -6,12 +6,11 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuBadge,
 } from "@/components";
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import { RootState } from "@/redux/store";
-import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
+import { Home, Inbox } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -19,28 +18,13 @@ import { useSelector } from "react-redux";
 const items = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/admin/dashboard",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
+    title: "Emplyee",
+    url: "/admin/employee",
     icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 
@@ -70,9 +54,6 @@ export default function AdminLayout({
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
-                  {item.title === "Inbox" && (
-                    <SidebarMenuBadge>24</SidebarMenuBadge>
-                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -80,10 +61,10 @@ export default function AdminLayout({
         </SidebarGroup>
       </AppSidebar>
 
-      <main className="w-screen">
+      <div className="w-full">
         <Navbar />
-        {children}
-      </main>
+        <main>{children}</main>
+      </div>
     </>
   );
 }
