@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -57,7 +58,15 @@ export function EmployeeForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+
+        {/* form actions */}
+        <div className="flex gap-3">
+          <Button type="submit">Submit</Button>
+
+          <Button variant="outline">
+            <Link href="/admin/employee">Cancel</Link>
+          </Button>
+        </div>
       </form>
     </Form>
   );

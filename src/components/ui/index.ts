@@ -13,3 +13,4 @@ export * from "./collapsible";
 export * from "./select";
 export * from "./badge";
 export * from "./table";
+export * from "./breadcrumb";

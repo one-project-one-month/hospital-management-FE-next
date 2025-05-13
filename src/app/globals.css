@@ -126,7 +126,7 @@ section {
 }
 
 main {
-  @apply mt-16;
+  @apply mt-25;
 }
 
 @utility flex-center {

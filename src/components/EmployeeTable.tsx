@@ -58,10 +58,6 @@ export const columns: ColumnDef<Employee>[] = [
 
       return (
         <div className="capitalize">
-          <Button variant="ghost" className="text-destructive text-sm">
-            <Trash2 /> delete
-          </Button>
-
           <Button
             onClick={(e) => {
               e.preventDefault();
@@ -71,6 +67,10 @@ export const columns: ColumnDef<Employee>[] = [
             className="text-sm"
           >
             <SquarePen /> edit
+          </Button>
+
+          <Button variant="ghost" className="text-destructive text-sm">
+            <Trash2 /> delete
           </Button>
         </div>
       );
