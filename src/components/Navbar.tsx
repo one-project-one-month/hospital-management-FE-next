@@ -79,13 +79,13 @@ const Navbar = () => {
         <Breadcrumb>
           <BreadcrumbList>
             {paths.map((path, index) => (
-              <>
-                <BreadcrumbItem key={index}>
+              <div className="flex-center gap-3" key={path + index}>
+                <BreadcrumbItem>
                   <BreadcrumbPage className="capitalize">{path}</BreadcrumbPage>
                 </BreadcrumbItem>
 
                 {paths.length !== index + 1 && <BreadcrumbSeparator />}
-              </>
+              </div>
             ))}
           </BreadcrumbList>
         </Breadcrumb>

@@ -25,8 +25,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "./ui";
+import {
+  Badge,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const data: Employee[] = [
   { id: 1, name: "Alice Johnson", role: "doctor" },
@@ -58,20 +69,54 @@ export const columns: ColumnDef<Employee>[] = [
 
       return (
         <div className="capitalize">
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              console.log(rowData);
+          <Link
+            href={{
+              pathname: "/admin/employee/edit",
+              query: { id: rowData.id },
             }}
-            variant="ghost"
-            className="text-sm"
           >
-            <SquarePen /> edit
-          </Button>
+            <Button variant="ghost" className="text-sm">
+              <SquarePen />
+              edit
+            </Button>
+          </Link>
 
-          <Button variant="ghost" className="text-destructive text-sm">
-            <Trash2 /> delete
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" className="text-destructive text-sm">
+                <Trash2 /> delete
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+
+              <DialogFooter className="sm:justify-start">
+                <DialogClose asChild>
+                  <Button type="button" variant="default">
+                    Close
+                  </Button>
+                </DialogClose>
+
+                <DialogClose
+                  onClick={() => {
+                    console.log(`${rowData.name} is deleted!`);
+                  }}
+                  asChild
+                >
+                  <Button type="button" variant="destructive">
+                    DELETE
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       );
     },
