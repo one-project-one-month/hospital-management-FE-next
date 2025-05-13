@@ -23,7 +23,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-background sticky top-0 z-10 flex items-center justify-between p-4 shadow">
+    <nav className="bg-background fixed top-0 z-10 flex w-[-webkit-fill-available] items-center justify-between p-4 shadow">
       {/* LEFT */}
       {/* <SidebarTrigger /> */}
       <SidebarTrigger />

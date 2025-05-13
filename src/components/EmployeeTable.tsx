@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,7 +59,7 @@ export const columns: ColumnDef<Employee>[] = [
       return (
         <div className="capitalize">
           <Button variant="ghost" className="text-destructive text-sm">
-            delete
+            <Trash2 /> delete
           </Button>
 
           <Button
@@ -70,7 +70,7 @@ export const columns: ColumnDef<Employee>[] = [
             variant="ghost"
             className="text-sm"
           >
-            edit
+            <SquarePen /> edit
           </Button>
         </div>
       );

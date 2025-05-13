@@ -61,10 +61,10 @@ export default function AdminLayout({
         </SidebarGroup>
       </AppSidebar>
 
-      <main className="w-screen">
+      <div className="w-full">
         <Navbar />
-        {children}
-      </main>
+        <main>{children}</main>
+      </div>
     </>
   );
 }
