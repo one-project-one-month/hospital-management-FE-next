@@ -19,27 +19,27 @@ import { useSelector } from "react-redux";
 const items = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/receptionist/dashboard",
     icon: Home,
   },
   {
     title: "Inventory",
-    url: "#",
+    url: "/receptionist/inventory",
     icon: Inbox,
   },
   {
     title: "Medicine",
-    url: "#",
+    url: "/receptionist/medicine",
     icon: Calendar,
   },
   {
     title: "Apointments",
-    url: "#",
+    url: "/receptionist/appointments",
     icon: Search,
   },
   {
     title: "Records",
-    url: "#",
+    url: "/receptionist/records",
     icon: Settings,
   },
 ];

@@ -75,12 +75,14 @@ export const columns: ColumnDef<Employee>[] = [
               query: { id: rowData.id },
             }}
           >
+            {/* Edit Btn */}
             <Button variant="ghost" className="text-sm">
               <SquarePen />
               edit
             </Button>
           </Link>
 
+          {/* Delete Btn */}
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="ghost" className="text-destructive text-sm">

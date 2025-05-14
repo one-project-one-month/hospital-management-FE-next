@@ -24,12 +24,12 @@ const items = [
   },
   {
     title: "Patients",
-    url: "#",
+    url: "/doctor/patients",
     icon: Inbox,
   },
   {
     title: "Appointments",
-    url: "#",
+    url: "/doctor/appointments",
     icon: Calendar,
   },
 ];
