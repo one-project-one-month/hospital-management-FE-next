@@ -7,7 +7,7 @@ const EmployeePage = () => {
     <>
       <section>
         <div className="w-full">
-          <Button variant="outline">
+          <Button variant="outline" asChild>
             <Link className="flex-center gap-1" href="/admin/employee/create">
               <Plus />
               Add Employee

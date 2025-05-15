@@ -10,11 +10,8 @@ import {
 } from "@/components";
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
-import { RootState } from "@/redux/store";
 import { Home, Inbox, Calendar } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useSelector } from "react-redux";
 
 const items = [
   {
@@ -24,12 +21,12 @@ const items = [
   },
   {
     title: "Patients",
-    url: "#",
+    url: "/doctor/patients",
     icon: Inbox,
   },
   {
     title: "Appointments",
-    url: "#",
+    url: "/doctor/appointments",
     icon: Calendar,
   },
 ];
@@ -39,12 +36,6 @@ export default function DoctorLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const role = useSelector((state: RootState) => state.auth.role);
-
-  if (role !== "doctor") {
-    redirect("/unauthorized");
-  }
-
   return (
     <>
       <AppSidebar>

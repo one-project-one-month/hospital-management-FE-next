@@ -18,18 +18,12 @@ import {
   DropdownMenuTrigger,
   SidebarTrigger,
 } from "@/components";
-import { useDispatch } from "react-redux";
-import { logout } from "@/redux/authSlice";
 import { usePathname } from "next/navigation";
+import { logout } from "./LoginForm/actions";
 
 const Navbar = () => {
   const pathname = usePathname();
   const paths = pathname.split("/").filter(Boolean);
-
-  const dispatch = useDispatch();
-  const onLogOut = () => {
-    dispatch(logout());
-  };
 
   return (
     <div className="fixed top-0 z-10 w-[-webkit-fill-available]">
@@ -63,7 +57,7 @@ const Navbar = () => {
                 variant="destructive"
                 onClick={(e) => {
                   e.preventDefault();
-                  onLogOut();
+                  logout();
                 }}
               >
                 <LogOut className="mr-2 h-[1.2rem] w-[1.2rem]" />

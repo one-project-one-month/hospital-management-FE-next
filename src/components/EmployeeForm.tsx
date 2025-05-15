@@ -63,7 +63,7 @@ export function EmployeeForm() {
         <div className="flex gap-3">
           <Button type="submit">Submit</Button>
 
-          <Button variant="outline">
+          <Button variant="outline" asChild>
             <Link href="/admin/employee">Cancel</Link>
           </Button>
         </div>
