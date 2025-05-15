@@ -1,33 +1,74 @@
-import { NextRequest, NextResponse } from "next/server";
 import { UserRole } from "./types";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { decrypt } from "./lib/session";
 
-export async function middleware(request: NextRequest) {
-  const role = request.cookies.get("role")?.value || null;
-  const { pathname } = request.nextUrl;
-  if (role == "null") {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+type Session = {
+  userId: string;
+  role: UserRole;
+};
 
-  // Root path redirect logic
-  if (pathname === "/") {
-    switch (role) {
-      case UserRole.Admin:
-        return NextResponse.redirect(new URL("/admin", request.url));
-      case UserRole.Doctor:
-        return NextResponse.redirect(new URL("/doctor", request.url));
-      case UserRole.Patient:
-        return NextResponse.redirect(new URL("/patient", request.url));
-      case UserRole.Receptionist:
-        return NextResponse.redirect(new URL("/receptionist", request.url));
+// Define which roles can access which route prefixes
+const roleBasedAccess: Record<string, UserRole[]> = {
+  "/admin": [UserRole.Admin],
+  "/doctor": [UserRole.Doctor],
+  "/patient": [UserRole.Patient],
+  "/receptionist": [UserRole.Receptionist],
+  "/unauthorized": [
+    UserRole.Admin,
+    UserRole.Doctor,
+    UserRole.Patient,
+    UserRole.Receptionist,
+  ],
+};
 
-      default:
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
+const publicRoutes = ["/login"];
+
+export default async function middleware(req: NextRequest) {
+  const path = req.nextUrl.pathname;
+
+  const cookie = (await cookies()).get("session")?.value;
+  const session = cookie ? ((await decrypt(cookie)) as Session) : null;
+
+  const isPublicRoute = publicRoutes.includes(path);
+
+  // Redirect unauthenticated users from protected pages
+  const protectedPrefixes = Object.keys(roleBasedAccess);
+  const matchedPrefix = protectedPrefixes.find((prefix) =>
+    path.startsWith(prefix),
+  );
+
+  if (matchedPrefix) {
+    if (!session?.userId) {
+      return NextResponse.redirect(new URL("/login", req.nextUrl));
+    }
+
+    const allowedRoles = roleBasedAccess[matchedPrefix];
+    if (!allowedRoles.includes(session.role)) {
+      return NextResponse.redirect(new URL("/unauthorized", req.nextUrl));
     }
   }
 
-  return NextResponse.next(); // Allow request to continue
-}
+  // Redirect authenticated users away from public routes (e.g., login)
+  if (isPublicRoute && session?.userId) {
+    return NextResponse.redirect(new URL("/", req.nextUrl));
+  }
 
-export const config = {
-  matcher: ["/", "/unauthorized"],
-};
+  // Handle root `/` redirection based on role
+  if (path === "/" && session?.role) {
+    switch (session.role) {
+      case UserRole.Admin:
+        return NextResponse.redirect(new URL("/admin", req.url));
+      case UserRole.Doctor:
+        return NextResponse.redirect(new URL("/doctor", req.url));
+      case UserRole.Patient:
+        return NextResponse.redirect(new URL("/patient", req.url));
+      case UserRole.Receptionist:
+        return NextResponse.redirect(new URL("/receptionist", req.url));
+      default:
+        return NextResponse.redirect(new URL("/unauthorized", req.url));
+    }
+  }
+
+  return NextResponse.next();
+}

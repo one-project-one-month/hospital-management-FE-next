@@ -10,11 +10,8 @@ import {
 } from "@/components";
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
-import { RootState } from "@/redux/store";
 import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useSelector } from "react-redux";
 
 const items = [
   {
@@ -49,12 +46,6 @@ export default function ReceptionistLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const role = useSelector((state: RootState) => state.auth.role);
-
-  if (role !== "receptionist") {
-    redirect("/unauthorized");
-  }
-
   return (
     <>
       <AppSidebar>
