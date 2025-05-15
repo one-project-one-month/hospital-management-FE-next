@@ -129,6 +129,11 @@ main {
   @apply mt-25;
 }
 
+/* Button has Bug: not showing cursor */
+button {
+  @apply cursor-pointer;
+}
+
 @utility flex-center {
   @apply flex items-center justify-center;
 }

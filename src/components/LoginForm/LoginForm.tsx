@@ -45,7 +45,6 @@ export function LoginForm({
                   <p className="text-red-500">{state.errors.email}</p>
                 )}
               </div>
-
               {/* Password */}
               <div className="grid gap-3">
                 <div className="flex items-center">
@@ -68,6 +67,7 @@ export function LoginForm({
                   <p className="text-red-500">{state.errors.email}</p>
                 )}
               </div>
+
               <SubmitButton />
             </div>
 
