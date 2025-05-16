@@ -3,13 +3,7 @@
 import { z } from "zod";
 import { createSession, deleteSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-
-const testUser = {
-  id: "1",
-  email: "test@email.com",
-  password: "11223344",
-  role: "admin",
-};
+import { authService } from "@/services";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }).trim(),
@@ -31,15 +25,14 @@ export async function login(prevState: any, formData: FormData) {
 
   const { email, password } = result.data;
 
-  if (email !== testUser.email || password !== testUser.password) {
-    return {
-      errors: {
-        email: ["Invalid email or password"],
-      },
-    };
-  }
+  const { data } = await authService.login({
+    email,
+    password,
+  });
 
-  await createSession({ userId: testUser.id, role: testUser.role });
+  const { user } = data;
+
+  await createSession({ userId: user.id, role: user.roles[0] });
 
   redirect("/");
 }

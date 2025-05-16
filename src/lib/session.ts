@@ -9,7 +9,7 @@ export async function createSession({
   userId,
   role,
 }: {
-  userId: string;
+  userId: number;
   role: string;
 }) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -28,7 +28,7 @@ export async function deleteSession() {
 }
 
 type SessionPayload = {
-  userId: string;
+  userId: number;
   role: string;
   expiresAt: Date;
 };
