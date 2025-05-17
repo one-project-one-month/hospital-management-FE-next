@@ -23,7 +23,7 @@ const formSchema = z.object({
   }),
 });
 
-export function EmployeeForm() {
+export function DoctorForm() {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,7 +64,7 @@ export function EmployeeForm() {
           <Button type="submit">Submit</Button>
 
           <Button variant="outline" asChild>
-            <Link href="/admin/employee">Cancel</Link>
+            <Link href="/admin/doctor">Cancel</Link>
           </Button>
         </div>
       </form>

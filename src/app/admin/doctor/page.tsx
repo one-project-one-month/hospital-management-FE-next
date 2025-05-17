@@ -1,26 +1,26 @@
-import { Button, EnployeeTable } from "@/components";
+import { Button, DoctorTable } from "@/components";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
-const EmployeePage = () => {
+const DoctorPage = () => {
   return (
     <>
       <section>
         <div className="w-full">
           <Button variant="outline" asChild>
-            <Link className="flex-center gap-1" href="/admin/employee/create">
+            <Link className="flex-center gap-1" href="/admin/doctor/create">
               <Plus />
-              Add Employee
+              Add Doctor
             </Link>
           </Button>
         </div>
 
         <div className="w-full">
-          <EnployeeTable />
+          <DoctorTable />
         </div>
       </section>
     </>
   );
 };
 
-export default EmployeePage;
+export default DoctorPage;

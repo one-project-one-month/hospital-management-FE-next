@@ -26,7 +26,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Badge,
   Dialog,
   DialogClose,
   DialogContent,
@@ -36,7 +35,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 const data: Employee[] = [
@@ -71,7 +69,7 @@ export const columns: ColumnDef<Employee>[] = [
         <div className="capitalize">
           <Link
             href={{
-              pathname: "/admin/employee/edit",
+              pathname: "/admin/doctor/edit",
               query: { id: rowData.id },
             }}
           >
@@ -138,28 +136,12 @@ export const columns: ColumnDef<Employee>[] = [
       );
     },
     cell: ({ row }) => {
-      const rowData = row.original;
-      const { role } = rowData;
-
-      return (
-        <div className="flex gap-2">
-          {row.getValue("name")}
-          <Badge
-            variant="outline"
-            className={cn(
-              role === "doctor" && "border-blue-700 text-blue-700",
-              role === "receptionist" && "border-green-700 text-green-700",
-            )}
-          >
-            {rowData.role}
-          </Badge>
-        </div>
-      );
+      return <div className="flex gap-2">{row.getValue("name")}</div>;
     },
   },
 ];
 
-export function EnployeeTable() {
+export function DoctorTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
