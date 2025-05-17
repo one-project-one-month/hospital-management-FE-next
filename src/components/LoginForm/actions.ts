@@ -29,26 +29,25 @@ export async function login(prevState: any, formData: FormData) {
   try {
     const response = await authService.login({ email, password });
     const { user } = response.data;
-    await createSession({ userId: user.id, role: user.roles[0] });
+    await createSession({ user });
+
+    return { user, errors: {} }; // success
   } catch (error) {
     return {
+      user: undefined,
       errors: {
         email: ["Invalid email or password"],
+        password: ["Invalid email or password"],
       },
     };
   }
-
-  redirect("/");
 }
 
 export async function logout() {
   try {
-    // await authService.logout();
     await deleteSession();
   } catch (error) {
     console.log("Logout Error");
     return;
   }
-
-  redirect("/login");
 }

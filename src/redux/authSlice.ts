@@ -1,17 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserInterface {
-  role: string | null;
+  user: {
+    name: string;
+    role: string;
+  } | null;
 }
 
 const initialState: UserInterface = {
-  role: null,
-};
-
-//! Storing Auth Data in LocalStorage is Really Bad Idea.
-
-const setCookie = (role: string | null) => {
-  document.cookie = `role=${role}; path=/; max-age=86400`; // for middleware use
+  user: null,
 };
 
 export const authSlice = createSlice({
@@ -19,12 +16,10 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action: PayloadAction<UserInterface>) {
-      state.role = action.payload.role;
-      setCookie(action.payload.role);
+      state.user = action.payload.user;
     },
     logout(state) {
-      state.role = null;
-      setCookie(null);
+      state.user = null;
     },
   },
 });

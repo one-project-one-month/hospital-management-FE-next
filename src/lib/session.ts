@@ -1,20 +1,17 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { User } from "@/types";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
 
-export async function createSession({
-  userId,
-  role,
-}: {
-  userId: number;
-  role: string;
-}) {
+export async function createSession({ user }: { user: User }) {
+  const { id, roles } = user;
+  const primaryRole = roles[0];
+
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  // need id/ name/ role
-  const session = await encrypt({ userId, role, expiresAt });
+  const session = await encrypt({ userId: id, role: primaryRole, expiresAt });
 
   (await cookies()).set("session", session, {
     httpOnly: true,

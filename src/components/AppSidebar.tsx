@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
 const AppSidebar = ({ children }: { children: React.ReactNode }) => {
-  const role = useSelector((state: RootState) => state.auth.role);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   return (
     <Sidebar collapsible="icon">
@@ -32,8 +32,8 @@ const AppSidebar = ({ children }: { children: React.ReactNode }) => {
                   width={40}
                   height={40}
                 />
-                <span>Name</span>
-                <Badge>{role || "not user"}</Badge>
+                <span>{user?.name || "uername"}</span>
+                <Badge>{user?.role || "not user"}</Badge>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

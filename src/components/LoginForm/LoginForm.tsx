@@ -9,15 +9,31 @@ import {
   Input,
   Label,
 } from "../ui";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { login } from "./actions";
+import { useDispatch } from "react-redux";
+import { redirect } from "next/navigation";
+import { login as loginReduxAction } from "@/redux/authSlice";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [state, loginAction] = useActionState(login, { errors: {} });
+  const dispatch = useDispatch();
+  const [state, loginAction] = useActionState(login, undefined);
+
+  useEffect(() => {
+    if (state?.user) {
+      console.log(state?.user);
+      const { name, roles } = state?.user;
+      const primaryRole = roles[0];
+      const userInRTK = { name, role: primaryRole };
+      dispatch(loginReduxAction({ user: userInRTK }));
+
+      redirect("/");
+    }
+  }, [state, dispatch]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -63,8 +79,8 @@ export function LoginForm({
                   placeholder="Password"
                   required
                 />
-                {state?.errors?.email && (
-                  <p className="text-red-500">{state.errors.email}</p>
+                {state?.errors?.password && (
+                  <p className="text-red-500">{state.errors.password}</p>
                 )}
               </div>
 
