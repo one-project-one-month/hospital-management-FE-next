@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components";
 
 import { cookies } from "next/headers";
 import { ReduxProvider } from "@/redux/provider";
+import ClientWrapper from "./clientWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,7 @@ export default async function RootLayout({
       >
         <ReduxProvider>
           <SidebarProvider defaultOpen={defaultOpen}>
-            {children}
+            <ClientWrapper>{children}</ClientWrapper>
           </SidebarProvider>
         </ReduxProvider>
       </body>

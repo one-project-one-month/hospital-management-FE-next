@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { LogOut, Settings, User } from "lucide-react";
@@ -18,12 +19,27 @@ import {
   DropdownMenuTrigger,
   SidebarTrigger,
 } from "@/components";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
+import { logout as logoutReduxAction } from "@/redux/authSlice";
+import { useDispatch } from "react-redux";
 import { logout } from "./LoginForm/actions";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const paths = pathname.split("/").filter(Boolean);
+
+  const onLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.log("Logout Error");
+      return;
+    }
+
+    dispatch(logoutReduxAction());
+    redirect("/login");
+  };
 
   return (
     <div className="fixed top-0 z-10 w-[-webkit-fill-available]">
@@ -57,7 +73,7 @@ const Navbar = () => {
                 variant="destructive"
                 onClick={(e) => {
                   e.preventDefault();
-                  logout();
+                  onLogout();
                 }}
               >
                 <LogOut className="mr-2 h-[1.2rem] w-[1.2rem]" />

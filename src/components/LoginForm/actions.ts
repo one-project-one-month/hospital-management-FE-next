@@ -1,15 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
-
 import { z } from "zod";
 import { createSession, deleteSession } from "@/lib/session";
-import { redirect } from "next/navigation";
-
-const testUser = {
-  id: "1",
-  email: "test@email.com",
-  password: "11223344",
-  role: "admin",
-};
+import { authService } from "@/services";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }).trim(),
@@ -19,7 +13,6 @@ const loginSchema = z.object({
     .trim(),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function login(prevState: any, formData: FormData) {
   const result = loginSchema.safeParse(Object.fromEntries(formData));
 
@@ -31,20 +24,29 @@ export async function login(prevState: any, formData: FormData) {
 
   const { email, password } = result.data;
 
-  if (email !== testUser.email || password !== testUser.password) {
+  try {
+    const response = await authService.login({ email, password });
+    const { user, token } = response.data;
+    await createSession({ user, token });
+
+    return { user, errors: {} }; // success
+  } catch (error) {
     return {
+      user: undefined,
       errors: {
         email: ["Invalid email or password"],
+        password: ["Invalid email or password"],
       },
     };
   }
-
-  await createSession({ userId: testUser.id, role: testUser.role });
-
-  redirect("/");
 }
 
 export async function logout() {
-  await deleteSession();
-  redirect("/login");
+  try {
+    await authService.logout();
+    await deleteSession();
+  } catch (error) {
+    console.log("Logout Error");
+    return;
+  }
 }
