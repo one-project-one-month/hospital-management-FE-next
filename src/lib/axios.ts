@@ -1,17 +1,23 @@
-// lib/axios.js
+"use server";
 import axios from "axios";
+import { getAccessToken } from "./session";
 
-const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+export async function getAxiosInstance() {
+  const token = await getAccessToken();
 
-// Optional: interceptors for auth tokens or error handling
-axiosInstance.interceptors.request.use((config) => {
-  // You can attach tokens here if needed
-  return config;
-});
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true,
+  });
 
-export default axiosInstance;
+  // Optional: interceptors
+  axiosInstance.interceptors.request.use((config) => {
+    return config;
+  });
+
+  return axiosInstance;
+}

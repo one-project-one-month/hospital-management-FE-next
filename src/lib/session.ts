@@ -6,12 +6,23 @@ import { User } from "@/types";
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
 
-export async function createSession({ user }: { user: User }) {
+export async function createSession({
+  user,
+  token,
+}: {
+  user: User;
+  token: string;
+}) {
   const { id, roles } = user;
   const primaryRole = roles[0];
 
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  const session = await encrypt({ userId: id, role: primaryRole, expiresAt });
+  const session = await encrypt({
+    userId: id,
+    role: primaryRole,
+    token,
+    expiresAt,
+  });
 
   (await cookies()).set("session", session, {
     httpOnly: true,
@@ -27,6 +38,7 @@ export async function deleteSession() {
 type SessionPayload = {
   userId: number;
   role: string;
+  token: string;
   expiresAt: Date;
 };
 
@@ -48,4 +60,14 @@ export async function decrypt(session: string | undefined = "") {
     console.log("Failed to verify session");
     console.log(error);
   }
+}
+
+export async function getAccessToken(): Promise<string | null> {
+  const sessionCookie = (await cookies()).get("session")?.value;
+  if (!sessionCookie) return null;
+
+  const payload = await decrypt(sessionCookie);
+  if (!payload) return null;
+
+  return payload.token as string;
 }

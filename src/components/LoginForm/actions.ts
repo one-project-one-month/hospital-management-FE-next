@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
-
 import { z } from "zod";
 import { createSession, deleteSession } from "@/lib/session";
-import { redirect } from "next/navigation";
 import { authService } from "@/services";
 
 const loginSchema = z.object({
@@ -28,8 +26,8 @@ export async function login(prevState: any, formData: FormData) {
 
   try {
     const response = await authService.login({ email, password });
-    const { user } = response.data;
-    await createSession({ user });
+    const { user, token } = response.data;
+    await createSession({ user, token });
 
     return { user, errors: {} }; // success
   } catch (error) {
@@ -45,6 +43,7 @@ export async function login(prevState: any, formData: FormData) {
 
 export async function logout() {
   try {
+    await authService.logout();
     await deleteSession();
   } catch (error) {
     console.log("Logout Error");

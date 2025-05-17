@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { LogOut, Settings, User } from "lucide-react";
@@ -21,7 +22,6 @@ import {
 import { redirect, usePathname } from "next/navigation";
 import { logout as logoutReduxAction } from "@/redux/authSlice";
 import { useDispatch } from "react-redux";
-// import { authService } from "@/services";
 import { logout } from "./LoginForm/actions";
 
 const Navbar = () => {
@@ -31,10 +31,7 @@ const Navbar = () => {
 
   const onLogout = async () => {
     try {
-      // Need to add token
-      // await authService.logout();
       await logout();
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.log("Logout Error");
       return;

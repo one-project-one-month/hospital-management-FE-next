@@ -25,7 +25,6 @@ export function LoginForm({
 
   useEffect(() => {
     if (state?.user) {
-      console.log(state?.user);
       const { name, roles } = state?.user;
       const primaryRole = roles[0];
       const userInRTK = { name, role: primaryRole };

@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios from "@/lib/axios";
+import { getAxiosInstance } from "@/lib/axios";
 import { LoginRequest, LoginResponse } from "@/types";
 
 class AuthService {
   async login(data: LoginRequest): Promise<LoginResponse> {
+    const axios = await getAxiosInstance();
+
     try {
       const response = await axios.post<LoginResponse>("/auth/login", data);
       return response.data;
@@ -14,6 +16,7 @@ class AuthService {
 
   // Add other methods here, e.g., logout, getProfile, etc.
   async logout() {
+    const axios = await getAxiosInstance();
     return axios.post("/auth/logout");
   }
 }
