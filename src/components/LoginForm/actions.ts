@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
 import { z } from "zod";
@@ -13,7 +15,6 @@ const loginSchema = z.object({
     .trim(),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function login(prevState: any, formData: FormData) {
   const result = loginSchema.safeParse(Object.fromEntries(formData));
 
@@ -25,19 +26,29 @@ export async function login(prevState: any, formData: FormData) {
 
   const { email, password } = result.data;
 
-  const { data } = await authService.login({
-    email,
-    password,
-  });
-
-  const { user } = data;
-
-  await createSession({ userId: user.id, role: user.roles[0] });
+  try {
+    const response = await authService.login({ email, password });
+    const { user } = response.data;
+    await createSession({ userId: user.id, role: user.roles[0] });
+  } catch (error) {
+    return {
+      errors: {
+        email: ["Invalid email or password"],
+      },
+    };
+  }
 
   redirect("/");
 }
 
 export async function logout() {
-  await deleteSession();
+  try {
+    // await authService.logout();
+    await deleteSession();
+  } catch (error) {
+    console.log("Logout Error");
+    return;
+  }
+
   redirect("/login");
 }

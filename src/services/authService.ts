@@ -1,11 +1,15 @@
-// /services/AuthService.ts
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "@/lib/axios";
 import { LoginRequest, LoginResponse } from "@/types";
 
 class AuthService {
   async login(data: LoginRequest): Promise<LoginResponse> {
-    const response = await axios.post<LoginResponse>("/auth/login", data);
-    return response.data;
+    try {
+      const response = await axios.post<LoginResponse>("/auth/login", data);
+      return response.data;
+    } catch (error) {
+      throw new Error("Login failed");
+    }
   }
 
   // Add other methods here, e.g., logout, getProfile, etc.

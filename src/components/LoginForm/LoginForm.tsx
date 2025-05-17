@@ -17,7 +17,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [state, loginAction] = useActionState(login, undefined);
+  const [state, loginAction] = useActionState(login, { errors: {} });
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
