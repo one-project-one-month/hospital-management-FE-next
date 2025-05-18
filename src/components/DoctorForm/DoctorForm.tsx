@@ -20,14 +20,15 @@ import { useState } from "react";
 import { Eye, EyeOff, Plus, Trash2 } from "lucide-react";
 
 import { toast } from "sonner";
-import { doctorFormSchema } from "./schema";
+import { formSchema } from "./schema";
 import { createDoctor } from "./actions";
+import { redirect } from "next/navigation";
 
 export function DoctorForm() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const form = useForm<z.infer<typeof doctorFormSchema>>({
-    resolver: zodResolver(doctorFormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -60,7 +61,7 @@ export function DoctorForm() {
     name: "specialty",
   });
 
-  async function onSubmit(values: z.infer<typeof doctorFormSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await createDoctor(values);
     if (result.success) {
       toast.success("Doctor created", {
@@ -69,6 +70,8 @@ export function DoctorForm() {
           color: "white",
         },
       });
+
+      redirect("/admin/doctor");
     } else {
       toast.error(result.error || "Error creating doctor", {
         style: {

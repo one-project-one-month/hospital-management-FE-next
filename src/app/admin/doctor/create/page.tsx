@@ -1,6 +1,6 @@
 import { DoctorForm } from "@/components";
 
-const DoctorCreate = () => {
+const DoctorCreatePage = () => {
   return (
     <section>
       <div className="w-full">
@@ -10,4 +10,4 @@ const DoctorCreate = () => {
   );
 };
 
-export default DoctorCreate;
+export default DoctorCreatePage;
