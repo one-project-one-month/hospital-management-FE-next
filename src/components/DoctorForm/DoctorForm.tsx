@@ -18,31 +18,16 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff, Plus, Trash2 } from "lucide-react";
-import { doctorService } from "@/services";
-import { redirect } from "next/navigation";
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  email: z.string().email(),
-  password: z.string().min(8, {
-    message: "Password must be at least 2 characters.",
-  }),
-  specialty: z.array(z.string().min(1)),
-  license_number: z.string(),
-  education: z.string(),
-  experience_years: z.number(),
-  biography: z.string(),
-  phone: z.string(),
-  address: z.string(),
-});
+import { toast } from "sonner";
+import { doctorFormSchema } from "./schema";
+import { createDoctor } from "./actions";
 
 export function DoctorForm() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof doctorFormSchema>>({
+    resolver: zodResolver(doctorFormSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -54,6 +39,17 @@ export function DoctorForm() {
       biography: "",
       phone: "",
       address: "",
+
+      // name: "Mg Mg",
+      // email: "mgmg@gmail.com",
+      // password: "password",
+      // specialty: ["Cardiology", "Internal Medicine"],
+      // license_number: "MTL7448",
+      // education: "M.D. from Harvard Medical School",
+      // experience_years: 10,
+      // biography: "A brief biography of the doctor.",
+      // phone: "09123456789",
+      // address: "Yangon",
     },
     mode: "onChange",
   });
@@ -64,12 +60,22 @@ export function DoctorForm() {
     name: "specialty",
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      await doctorService.createDoctor(values);
-      redirect("/admin/doctor");
-    } catch (error) {
-      throw error;
+  async function onSubmit(values: z.infer<typeof doctorFormSchema>) {
+    const result = await createDoctor(values);
+    if (result.success) {
+      toast.success("Doctor created", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+        },
+      });
+    } else {
+      toast.error(result.error || "Error creating doctor", {
+        style: {
+          backgroundColor: "red",
+          color: "white",
+        },
+      });
     }
   }
 
@@ -285,19 +291,3 @@ export function DoctorForm() {
     </Form>
   );
 }
-
-// {
-//   "name": "Mg Mg",
-//   "email": "mgmg@gmail.com",
-//   "password": "password",
-//   "specialty": [
-//     "Cardiology",
-//     "Internal Medicine"
-//   ],
-//   "license_number": "MTL7448",
-//   "education": "M.D. from Harvard Medical School",
-//   "experience_years": 10,
-//   "biography": "A brief biography of the doctor.",
-//   "phone": "09123456789",
-//   "address": "Yangon"
-// }
