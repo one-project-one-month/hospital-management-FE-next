@@ -1,17 +1,16 @@
+import { IBaseResponse } from ".";
+
 export type LoginRequest = {
   email: string;
   password: string;
 };
 
-export type LoginResponse = {
-  status: string;
-  statusCode: number;
-  message: string;
+export interface LoginResponse extends IBaseResponse {
   data: {
     user: User;
     token: string;
   };
-};
+}
 
 export type User = {
   id: number;

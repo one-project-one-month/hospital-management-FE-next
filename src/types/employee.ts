@@ -1,3 +1,5 @@
+import { IBaseResponse } from ".";
+
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 export interface IDoctor extends IEmployee {
   specialty: string[];
@@ -15,4 +17,9 @@ export interface IEmployee {
   name: string;
   email: string;
   password: string;
+  id?: string;
+}
+
+export interface IDoctorResponse extends IBaseResponse {
+  data: IDoctor[];
 }
