@@ -16,3 +16,4 @@ export * from "./table";
 export * from "./breadcrumb";
 export * from "./dialog";
 export * from "./form";
+export * from "./sonner";

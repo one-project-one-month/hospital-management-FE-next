@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider } from "@/components";
+import { SidebarProvider, Toaster } from "@/components";
 
 import { cookies } from "next/headers";
 import { ReduxProvider } from "@/redux/provider";
@@ -40,6 +40,7 @@ export default async function RootLayout({
             <ClientWrapper>{children}</ClientWrapper>
           </SidebarProvider>
         </ReduxProvider>
+        <Toaster />
       </body>
     </html>
   );
