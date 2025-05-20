@@ -1,32 +1,129 @@
 import {
   Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from "@/components";
+import { BriefcaseMedical } from "lucide-react";
 
 const EditPatientPage = () => {
   return (
-    <section>
+    <section className="grid gap-5">
       <div className="w-full">
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Theme" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="light">Doctor 1</SelectItem>
-            <SelectItem value="dark">Doctor 2</SelectItem>
-            <SelectItem value="system">Doctor 3</SelectItem>
-          </SelectContent>
-        </Select>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline">
+              <BriefcaseMedical />
+              Select Doctor
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent className="p-5">
+            <SheetHeader>
+              <SheetTitle>Select Doctor</SheetTitle>
+            </SheetHeader>
+
+            <div className="grid gap-4 overflow-auto py-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Doctor Who</CardTitle>
+                  <CardDescription>Sepciality</CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <p>Experience: 15</p>
+                </CardContent>
+                <CardFooter>
+                  <Button>Book</Button>
+                </CardFooter>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Doctor Who</CardTitle>
+                  <CardDescription>Sepciality</CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <p>Experience: 15</p>
+                </CardContent>
+                <CardFooter>
+                  <Button>Book</Button>
+                </CardFooter>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Doctor Who</CardTitle>
+                  <CardDescription>Sepciality</CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <p>Experience: 15</p>
+                </CardContent>
+                <CardFooter>
+                  <Button>Book</Button>
+                </CardFooter>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Doctor Who</CardTitle>
+                  <CardDescription>Sepciality</CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <p>Experience: 15</p>
+                </CardContent>
+                <CardFooter>
+                  <Button>Book</Button>
+                </CardFooter>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Doctor Who</CardTitle>
+                  <CardDescription>Sepciality</CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <p>Experience: 15</p>
+                </CardContent>
+                <CardFooter>
+                  <Button>Book</Button>
+                </CardFooter>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Doctor Who</CardTitle>
+                  <CardDescription>Sepciality</CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <p>Experience: 15</p>
+                </CardContent>
+                <CardFooter>
+                  <Button>Book</Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
       <div className="w-full">
         <Select>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Theme" />
+            <SelectValue placeholder="Date" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="light">Today</SelectItem>
@@ -41,6 +138,11 @@ const EditPatientPage = () => {
         <Button>11 am</Button>
         <Button>1 pm</Button>
         <Button>3 pm</Button>
+      </div>
+
+      <div className="grid w-1/2 grid-cols-2 gap-5">
+        <Button variant="outline">Confirm</Button>
+        <Button variant="secondary">Cancle</Button>
       </div>
     </section>
   );
