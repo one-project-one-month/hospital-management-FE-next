@@ -91,7 +91,9 @@ const Navbar = () => {
             {paths.map((path, index) => (
               <div className="flex-center gap-3" key={path + index}>
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="capitalize">{path}</BreadcrumbPage>
+                  <BreadcrumbPage className="capitalize">
+                    {path.replace("_", " ")}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
 
                 {paths.length !== index + 1 && <BreadcrumbSeparator />}

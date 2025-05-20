@@ -10,7 +10,14 @@ import {
 } from "@/components";
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
-import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
+import {
+  Home,
+  Inbox,
+  Calendar,
+  Search,
+  Settings,
+  CalendarCheck2,
+} from "lucide-react";
 import Link from "next/link";
 
 const items = [
@@ -33,6 +40,11 @@ const items = [
     title: "Apointments",
     url: "/receptionist/appointments",
     icon: Search,
+  },
+  {
+    title: "Make Apointments",
+    url: "/receptionist/make_appointment",
+    icon: CalendarCheck2,
   },
   {
     title: "Records",
