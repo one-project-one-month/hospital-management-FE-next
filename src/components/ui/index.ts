@@ -17,3 +17,6 @@ export * from "./breadcrumb";
 export * from "./dialog";
 export * from "./form";
 export * from "./sonner";
+export * from "./tabs";
+export * from "./popover";
+export * from "./calendar";

@@ -1,5 +1,9 @@
 const AppointmentsPage = () => {
-  return <div className="">AppointmentsPage</div>;
+  return (
+    <section>
+      <div className="w-full">AppointmentsPage</div>
+    </section>
+  );
 };
 
 export default AppointmentsPage;

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -34,31 +33,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui";
+} from "../ui";
 import Link from "next/link";
+import { getDoctors } from "./actions";
+import { useEffect, useState } from "react";
+import { IDoctor } from "@/types";
 
-const data: Employee[] = [
-  { id: 1, name: "Alice Johnson", role: "doctor" },
-  { id: 2, name: "Bob Smith", role: "receptionist" },
-  { id: 3, name: "Charlie Brown", role: "doctor" },
-  { id: 4, name: "Diana Prince", role: "receptionist" },
-  { id: 5, name: "Ethan Hunt", role: "doctor" },
-  { id: 6, name: "Fiona Scott", role: "receptionist" },
-  { id: 7, name: "George Miller", role: "doctor" },
-  { id: 8, name: "Hannah Davis", role: "receptionist" },
-  { id: 9, name: "Ian Clark", role: "doctor" },
-  { id: 10, name: "Jane Foster", role: "receptionist" },
-  { id: 11, name: "Kevin Lee", role: "doctor" },
-  { id: 12, name: "Laura Kim", role: "receptionist" },
-];
-
-export type Employee = {
-  id: number;
-  name: string;
-  role: "doctor" | "receptionist";
-};
-
-export const columns: ColumnDef<Employee>[] = [
+export const columns: ColumnDef<IDoctor>[] = [
+  // Actions
   {
     accessorKey: "actions",
     header: () => <div className="px-4.5 text-left">Actions</div>,
@@ -142,16 +124,14 @@ export const columns: ColumnDef<Employee>[] = [
 ];
 
 export function DoctorTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [doctors, setDoctors] = useState<IDoctor[]>([]);
 
-  const table = useReactTable({
-    data,
+  const table = useReactTable<IDoctor>({
+    data: doctors,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -168,6 +148,19 @@ export function DoctorTable() {
       rowSelection,
     },
   });
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const { data } = await getDoctors();
+        setDoctors(data || []);
+      } catch (error) {
+        console.error("Failed to fetch doctors:", error);
+      }
+    };
+
+    fetchDoctors();
+  }, [setDoctors]);
 
   return (
     <div className="w-full">
