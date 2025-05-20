@@ -1,27 +1,34 @@
+"use client";
 import {
   Button,
+  Calendar,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components";
-import { BriefcaseMedical } from "lucide-react";
+import { BriefcaseMedical, Calendar as CalendarIcon } from "lucide-react";
+import { useState } from "react";
+import { format } from "date-fns";
+
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const EditPatientPage = () => {
+  const [date, setDate] = useState<Date>();
+
   return (
-    <section className="grid gap-5">
+    <section className="">
       <div className="w-full">
         <Sheet>
           <SheetTrigger asChild>
@@ -121,16 +128,28 @@ const EditPatientPage = () => {
       </div>
 
       <div className="w-full">
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Date" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="light">Today</SelectItem>
-            <SelectItem value="dark">Tomorrow</SelectItem>
-            <SelectItem value="system">The next day</SelectItem>
-          </SelectContent>
-        </Select>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[280px] justify-start text-left font-normal",
+                !date && "text-muted-foreground",
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "PPP") : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
       <div className="grid w-full grid-cols-2 gap-5">
@@ -141,8 +160,13 @@ const EditPatientPage = () => {
       </div>
 
       <div className="grid w-1/2 grid-cols-2 gap-5">
-        <Button variant="outline">Confirm</Button>
-        <Button variant="secondary">Cancle</Button>
+        <Button variant="outline" asChild>
+          <Link href="/receptionist/appointments">Confirm</Link>
+        </Button>
+
+        <Button variant="outline" asChild>
+          <Link href="/receptionist/make_appointment">Cancel</Link>
+        </Button>
       </div>
     </section>
   );

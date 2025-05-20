@@ -1,5 +1,8 @@
+import { redirect } from "next/navigation";
+
 const ReceptionistPage = () => {
-  return <div className="">ReceptionistPage</div>;
+  redirect("/receptionist/dashboard");
+  // return <div className="">ReceptionistPage</div>;
 };
 
 export default ReceptionistPage;
