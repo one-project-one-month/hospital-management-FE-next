@@ -26,30 +26,13 @@ import {
 } from "@/components/ui";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getPatients } from "./actions";
+import { IPatient } from "@/types";
+import { useDispatch } from "react-redux";
+import { storePatient } from "@/redux/patientSlice";
 
-const data: Employee[] = [
-  { id: 1, name: "Alice Johnson", role: "receptionist" },
-  { id: 2, name: "Bob Smith", role: "receptionist" },
-  { id: 3, name: "Charlie Brown", role: "receptionist" },
-  { id: 4, name: "Diana Prince", role: "receptionist" },
-  { id: 5, name: "Ethan Hunt", role: "receptionist" },
-  { id: 6, name: "Fiona Scott", role: "receptionist" },
-  { id: 7, name: "George Miller", role: "receptionist" },
-  { id: 8, name: "Hannah Davis", role: "receptionist" },
-  { id: 9, name: "Ian Clark", role: "receptionist" },
-  { id: 10, name: "Jane Foster", role: "receptionist" },
-  { id: 11, name: "Kevin Lee", role: "receptionist" },
-  { id: 12, name: "Laura Kim", role: "receptionist" },
-];
-
-type Employee = {
-  id: number;
-  name: string;
-  role: "receptionist";
-};
-
-const columns: ColumnDef<Employee>[] = [
+const columns: ColumnDef<IPatient>[] = [
   {
     accessorKey: "actions",
     header: () => <div className="px-4.5 text-left">Actions</div>,
@@ -99,10 +82,11 @@ export function PatientTable() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  // const [doctors, setDoctors] = useState<IDoctor[]>([]);
+  const [patient, setPatient] = useState<IPatient[]>([]);
+  const dispatch = useDispatch();
 
   const table = useReactTable({
-    data,
+    data: patient,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -120,20 +104,20 @@ export function PatientTable() {
     },
   });
 
-  // useEffect(() => {
-  //   const fetchDoctors = async () => {
-  //     try {
-  //       const { data } = await getPatients();
-  //       console.log(data);
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const { data } = await getPatients();
+        const patientData = data?.patients || [];
+        dispatch(storePatient(patientData));
+        setPatient(patientData);
+      } catch (error) {
+        console.error("Failed to fetch doctors:", error);
+      }
+    };
 
-  //       // setDoctors(data || []);
-  //     } catch (error) {
-  //       console.error("Failed to fetch doctors:", error);
-  //     }
-  //   };
-
-  //   fetchDoctors();
-  // }, [setDoctors]);
+    fetchDoctors();
+  }, [setPatient, dispatch]);
 
   return (
     <div className="w-full">

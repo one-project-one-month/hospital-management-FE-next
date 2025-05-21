@@ -14,5 +14,7 @@ export interface IPatient {
 }
 
 export interface IPatientResponse extends IBaseResponse {
-  data: IPatient[];
+  data: {
+    patients: IPatient[];
+  };
 }

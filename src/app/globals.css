@@ -141,3 +141,7 @@ button {
 @utility screen {
   @apply h-screen w-screen;
 }
+
+@utility grid-cols-auto {
+  @apply grid-cols-[auto_1fr];
+}

@@ -2,10 +2,14 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import authReducer from "./authSlice";
+import patientReducer from "./patientSlice";
+import doctorReducer from "./doctorSlice";
 
 // Combine reducers if you have multiple slices
 const rootReducer = combineReducers({
   auth: authReducer,
+  patients: patientReducer,
+  doctors: doctorReducer,
 });
 
 // Persist config
