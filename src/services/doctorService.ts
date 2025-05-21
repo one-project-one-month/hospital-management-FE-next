@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAxiosInstance } from "@/lib/axios";
+import { handleHttpError, HttpError } from "@/lib/httpError";
 import { IDoctor, IDoctorResponse } from "@/types";
+
+interface ICreateDoctorResponse {
+  message: string;
+  doctor: IDoctor;
+}
 
 class DoctorService {
   async getDoctors(): Promise<IDoctorResponse> {
@@ -8,62 +14,26 @@ class DoctorService {
 
     try {
       const response = await axios.get<IDoctorResponse>("/admin/doctors");
-
       return response.data;
     } catch (error: any) {
-      if (error.response) {
-        // Server responded with a status code out of the 2xx range
-        throw {
-          message: error.response.data?.message || "Server Error",
-          status: error.response.status,
-          data: error.response.data,
-        };
-      } else if (error.request) {
-        // No response received from server
-        throw {
-          message: "No response from server",
-          request: error.request,
-        };
-      } else {
-        // Other errors (e.g. setup issues)
-        throw {
-          message: error.message || "Unexpected error occurred",
-        };
-      }
+      handleHttpError(error);
     }
   }
 
-  async createDoctor(data: IDoctor): Promise<any> {
+  async createDoctor(data: IDoctor): Promise<ICreateDoctorResponse> {
     const axios = await getAxiosInstance();
 
     try {
-      const response = await axios.post<any>("/admin/createDoctor", {
-        ...data,
-      });
-
+      const response = await axios.post<ICreateDoctorResponse>(
+        "/admin/createDoctor",
+        data,
+      );
       return response.data;
     } catch (error: any) {
-      if (error.response) {
-        // Server responded with a status code out of the 2xx range
-        throw {
-          message: error.response.data?.message || "Server Error",
-          status: error.response.status,
-          data: error.response.data,
-        };
-      } else if (error.request) {
-        // No response received from server
-        throw {
-          message: "No response from server",
-          request: error.request,
-        };
-      } else {
-        // Other errors (e.g. setup issues)
-        throw {
-          message: error.message || "Unexpected error occurred",
-        };
-      }
+      handleHttpError(error);
     }
   }
 }
 
 export const doctorService = new DoctorService();
+export { HttpError };
