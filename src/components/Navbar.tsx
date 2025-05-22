@@ -34,7 +34,6 @@ const Navbar = () => {
       await logout();
     } catch (error) {
       console.log("Logout Error");
-      return;
     }
 
     dispatch(logoutReduxAction());
