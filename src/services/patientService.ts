@@ -5,15 +5,13 @@ import { IPatientResponse } from "@/types";
 class PatientService {
   async getPatients(): Promise<IPatientResponse> {
     const axios = await getAxiosInstance();
-    console.log("test");
 
     try {
       const response = await axios.get<IPatientResponse>("/admin/patients");
-      console.log("test 1");
 
       return response.data;
     } catch (error: any) {
-      console.log("test 2");
+      console.log(error);
 
       if (error.response) {
         // Server responded with a status code out of the 2xx range
