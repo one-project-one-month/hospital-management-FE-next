@@ -9,6 +9,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -25,17 +33,37 @@ import {
   Star,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
-
+import { addDays, format, isAfter, isBefore, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { IDoctor } from "@/types";
-import { getDoctors } from "./actions";
+import { getDoctors, bookDoctor as bookDoctorAction } from "./actions";
 import { useDispatch } from "react-redux";
 import { storeDoctor } from "@/redux/doctorSlice";
 
+const today = startOfDay(new Date());
+const maxDate = addDays(today, 6);
+
+const shifts = [
+  {
+    time: 9,
+    title: "9 A.M.",
+  },
+  {
+    time: 11,
+    title: "11 P.M.",
+  },
+  {
+    time: 13,
+    title: "1 P.M.",
+  },
+  {
+    time: 15,
+    title: "3 P.M.",
+  },
+];
+
 const EditPatientPage = () => {
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date | undefined>(today);
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | undefined>();
   const [openSheet, setOpenSheet] = useState(false);
@@ -56,9 +84,32 @@ const EditPatientPage = () => {
     fetchDoctors();
   }, [setDoctors, dispatch]);
 
+  useEffect(() => {
+    const newDate = new Date().toISOString();
+    const fetchDoctors = async () => {
+      try {
+        const { data } = await bookDoctorAction({
+          date: newDate,
+          doctor_id: selectedDoctor?.id || "",
+        });
+        const doctorData = data || [];
+        console.log(doctorData);
+      } catch (error) {
+        console.error("Failed to fetch doctors:", error);
+      }
+    };
+
+    fetchDoctors();
+  }, [selectedDoctor]);
+
   // Function to open the sheet
   const closeSheet = () => {
     setOpenSheet(false);
+  };
+
+  const BookDoctor = (doctor: IDoctor) => {
+    setSelectedDoctor(doctor);
+    closeSheet();
   };
 
   return (
@@ -116,8 +167,7 @@ const EditPatientPage = () => {
                       disabled={doc.id === selectedDoctor?.id}
                       type="button"
                       onClick={() => {
-                        setSelectedDoctor(doc);
-                        closeSheet();
+                        BookDoctor(doc);
                       }}
                     >
                       Book
@@ -180,19 +230,52 @@ const EditPatientPage = () => {
                   selected={date}
                   onSelect={setDate}
                   initialFocus
+                  disabled={(date) =>
+                    isBefore(date, today) || isAfter(date, maxDate)
+                  }
                 />
               </PopoverContent>
             </Popover>
           </div>
 
           <div className="grid w-full grid-cols-2 gap-5">
-            <Button>9 am</Button>
-            <Button>11 am</Button>
-            <Button>1 pm</Button>
-            <Button>3 pm</Button>
+            {shifts.map((shift, index) => (
+              <Dialog key={index}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" key={index}>
+                    {shift.title}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you sure?</DialogTitle>
+                    <DialogDescription>
+                      You are booking an appointment with{" "}
+                      <span className="mx-2 font-bold text-blue-700">
+                        {"Dr John"}
+                      </span>
+                      for
+                      <span className="mx-2 font-black">{"9 P.M."}</span>
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DialogFooter className="sm:justify-start">
+                    <DialogClose asChild>
+                      <Button type="button" variant="outline">
+                        Close
+                      </Button>
+                    </DialogClose>
+
+                    <DialogClose asChild>
+                      <Button type="button">Confirm</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            ))}
           </div>
 
-          <div className="grid w-1/2 grid-cols-2 gap-5">
+          {/* <div className="grid w-1/2 grid-cols-2 gap-5">
             <Button variant="outline" asChild>
               <Link href="/receptionist/appointments">Confirm</Link>
             </Button>
@@ -200,7 +283,7 @@ const EditPatientPage = () => {
             <Button variant="outline" asChild>
               <Link href="/receptionist/make_appointment">Cancel</Link>
             </Button>
-          </div>
+          </div> */}
         </>
       )}
     </section>
