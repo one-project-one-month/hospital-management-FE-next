@@ -4,7 +4,6 @@ import { getAccessToken } from "./session";
 
 export async function getAxiosInstance() {
   const token = await getAccessToken();
-  // console.log(token);
 
   const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,

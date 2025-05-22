@@ -14,7 +14,7 @@ export async function getDoctors() {
 }
 
 // TODO
-export async function bookDoctor({
+export async function getAppointmentData({
   doctor_id,
   date,
 }: {

@@ -36,7 +36,7 @@ import { useEffect, useState } from "react";
 import { addDays, format, isAfter, isBefore, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { IDoctor } from "@/types";
-import { getDoctors, bookDoctor as bookDoctorAction } from "./actions";
+import { getDoctors, getAppointmentData } from "./actions";
 import { useDispatch } from "react-redux";
 import { storeDoctor } from "@/redux/doctorSlice";
 
@@ -63,10 +63,11 @@ const shifts = [
 ];
 
 const EditPatientPage = () => {
-  const [date, setDate] = useState<Date | undefined>(today);
+  const [date, setDate] = useState<Date>(today);
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | undefined>();
   const [openSheet, setOpenSheet] = useState(false);
+  const [openCalendar, setOpenCalendar] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -85,10 +86,11 @@ const EditPatientPage = () => {
   }, [setDoctors, dispatch]);
 
   useEffect(() => {
-    const newDate = new Date().toISOString();
-    const fetchDoctors = async () => {
+    const newDate = new Date(date).toLocaleDateString("en-CA");
+
+    const fetchAppointments = async () => {
       try {
-        const { data } = await bookDoctorAction({
+        const { data } = await getAppointmentData({
           date: newDate,
           doctor_id: selectedDoctor?.id || "",
         });
@@ -99,8 +101,8 @@ const EditPatientPage = () => {
       }
     };
 
-    fetchDoctors();
-  }, [selectedDoctor]);
+    fetchAppointments();
+  }, [selectedDoctor, date]);
 
   // Function to open the sheet
   const closeSheet = () => {
@@ -110,6 +112,13 @@ const EditPatientPage = () => {
   const BookDoctor = (doctor: IDoctor) => {
     setSelectedDoctor(doctor);
     closeSheet();
+  };
+
+  const handleSelectDate = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      setDate(selectedDate);
+      setOpenCalendar(false); // close popover after date selection
+    }
   };
 
   return (
@@ -211,7 +220,7 @@ const EditPatientPage = () => {
       {selectedDoctor && (
         <>
           <div className="w-full">
-            <Popover>
+            <Popover open={openCalendar}>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
@@ -219,6 +228,7 @@ const EditPatientPage = () => {
                     "w-[280px] justify-start text-left font-normal",
                     !date && "text-muted-foreground",
                   )}
+                  onClick={() => setOpenCalendar(!openCalendar)}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {date ? format(date, "PPP") : <span>Pick a date</span>}
@@ -228,7 +238,7 @@ const EditPatientPage = () => {
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={handleSelectDate}
                   initialFocus
                   disabled={(date) =>
                     isBefore(date, today) || isAfter(date, maxDate)
