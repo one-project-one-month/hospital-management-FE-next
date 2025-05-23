@@ -2,6 +2,7 @@
 "use server";
 
 import { doctorService, appointmentService } from "@/services";
+import { IAppointmentCreateRequest } from "@/types";
 
 export async function getDoctors() {
   try {
@@ -13,7 +14,6 @@ export async function getDoctors() {
   }
 }
 
-// TODO
 export async function getAppointmentData({
   doctor_id,
   date,
@@ -25,6 +25,21 @@ export async function getAppointmentData({
     const { data } = await appointmentService.getAppointmentByDoctorId({
       doctor_id,
       date,
+    });
+
+    return { data: data.appointment, success: true };
+  } catch (error) {
+    return { success: false, error: "Something went wrong" };
+  }
+}
+
+// TODO:
+export async function createAppointment(
+  appointmentData: IAppointmentCreateRequest,
+) {
+  try {
+    const { data } = await appointmentService.createAppointment({
+      ...appointmentData,
     });
 
     return { data, success: true };

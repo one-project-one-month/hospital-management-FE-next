@@ -35,90 +35,249 @@ import {
 import { useEffect, useState } from "react";
 import { addDays, format, isAfter, isBefore, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
-import { IDoctor } from "@/types";
-import { getDoctors, getAppointmentData } from "./actions";
+import { IAppointment, IDoctor } from "@/types";
+import { getDoctors, getAppointmentData, createAppointment } from "./actions";
 import { useDispatch } from "react-redux";
 import { storeDoctor } from "@/redux/doctorSlice";
+import { toast } from "sonner";
+import { redirect, useSearchParams } from "next/navigation";
 
 const today = startOfDay(new Date());
 const maxDate = addDays(today, 6);
 
-const shifts = [
-  {
-    time: 9,
-    title: "9 A.M.",
-  },
-  {
-    time: 11,
-    title: "11 P.M.",
-  },
-  {
-    time: 13,
-    title: "1 P.M.",
-  },
-  {
-    time: 15,
-    title: "3 P.M.",
-  },
+type Shift = {
+  time: string;
+  title: string;
+};
+
+const shifts: Shift[] = [
+  { time: "09:00:00", title: "9 A.M." },
+  { time: "11:00:00", title: "11 P.M." },
+  { time: "13:00:00", title: "1 P.M." },
+  { time: "15:00:00", title: "3 P.M." },
 ];
 
+// Reusable: Doctor card for listing in sheet
+const DoctorCard = ({
+  doctor,
+  selectedDoctorId,
+  onSelect,
+}: {
+  doctor: IDoctor;
+  selectedDoctorId?: string;
+  onSelect: () => void;
+}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>{doctor.name}</CardTitle>
+      <CardDescription>
+        <Badge className="bg-yellow-400 text-black">
+          <Star />
+          {doctor.experience_years}
+        </Badge>
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="flex gap-2">
+        <span>specialties:</span>
+        <div className="grid-cols-auto grid gap-1">
+          {doctor.specialty.map((skill, index) => (
+            <Badge key={index} variant="outline">
+              {skill}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Button
+        disabled={doctor.id === selectedDoctorId}
+        type="button"
+        onClick={onSelect}
+      >
+        Book
+      </Button>
+    </CardFooter>
+  </Card>
+);
+
+// Reusable: Card for showing selected doctor
+const SelectedDoctorCard = ({ doctor }: { doctor: IDoctor }) => (
+  <Card className="w-sm">
+    <CardHeader>
+      <CardTitle>{doctor.name}</CardTitle>
+      <CardDescription>
+        <Badge className="bg-yellow-400 text-black">
+          <Star />
+          {doctor.experience_years}
+        </Badge>
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="flex gap-2">
+        <span>specialties:</span>
+        <div className="grid-cols-auto grid gap-1">
+          {doctor.specialty.map((skill, index) => (
+            <Badge key={index} variant="outline">
+              {skill}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+// Reusable: Shift button with confirmation dialog
+const ShiftBookingButton = ({
+  doctor,
+  shift,
+  disabled = false,
+  date,
+}: {
+  doctor: IDoctor;
+  shift: Shift;
+  disabled: boolean;
+  date: Date;
+}) => {
+  const searchParams = useSearchParams();
+
+  const handleCreateAppointment = async () => {
+    const id = searchParams.get("id");
+    const newDate = new Date(date).toLocaleDateString("en-CA");
+
+    const data = {
+      patient_profile_id: id || "",
+      doctor_profile_id: doctor.id || "",
+      appointment_date: newDate,
+      appointment_time: shift.time,
+      notes: "a test note",
+    };
+
+    const result = await createAppointment({ ...data });
+    if (result.success) {
+      toast.success("Appointment created", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+        },
+      });
+
+      redirect("/receptionist/appointments");
+    } else {
+      toast.error(result.error || "Error creating appointment", {
+        style: {
+          backgroundColor: "red",
+          color: "white",
+        },
+      });
+    }
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          disabled={disabled}
+          className={cn(disabled && "border-red-400")}
+          variant="outline"
+        >
+          {shift.title}
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you sure?</DialogTitle>
+          <DialogDescription>
+            You are booking an appointment with
+            <span className="mx-2 font-bold text-blue-700">{doctor.name}</span>
+            for
+            <span className="mx-2 font-black">{shift.title}</span>
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="sm:justify-start">
+          <DialogClose asChild>
+            <Button type="button" variant="outline">
+              Close
+            </Button>
+          </DialogClose>
+          {/* <DialogClose asChild>
+            <Button type="button">Confirm</Button>
+          </DialogClose> */}
+
+          <Button type="button" onClick={() => handleCreateAppointment()}>
+            Confirm
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+// Main Page
 const EditPatientPage = () => {
   const [date, setDate] = useState<Date>(today);
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | undefined>();
   const [openSheet, setOpenSheet] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
+  const [appointments, setAppointments] = useState<IAppointment[]>([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const { data } = await getDoctors();
-        const doctorData = data || [];
-        dispatch(storeDoctor(doctorData));
-        setDoctors(doctorData);
+        dispatch(storeDoctor(data || []));
+        setDoctors(data || []);
       } catch (error) {
         console.error("Failed to fetch doctors:", error);
       }
     };
-
     fetchDoctors();
-  }, [setDoctors, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
-    const newDate = new Date(date).toLocaleDateString("en-CA");
-
     const fetchAppointments = async () => {
       try {
+        const newDate = new Date(date).toLocaleDateString("en-CA");
         const { data } = await getAppointmentData({
           date: newDate,
           doctor_id: selectedDoctor?.id || "",
         });
-        const doctorData = data || [];
-        console.log(doctorData);
+
+        setAppointments(data || []);
       } catch (error) {
-        console.error("Failed to fetch doctors:", error);
+        console.error("Failed to fetch appointments:", error);
       }
     };
-
     fetchAppointments();
   }, [selectedDoctor, date]);
 
-  // Function to open the sheet
-  const closeSheet = () => {
+  const handleSelectDoctor = (doc: IDoctor) => {
+    setSelectedDoctor(doc);
     setOpenSheet(false);
-  };
-
-  const BookDoctor = (doctor: IDoctor) => {
-    setSelectedDoctor(doctor);
-    closeSheet();
   };
 
   const handleSelectDate = (selectedDate: Date | undefined) => {
     if (selectedDate) {
       setDate(selectedDate);
-      setOpenCalendar(false); // close popover after date selection
+      setOpenCalendar(false);
     }
+  };
+
+  const IsAppointmentAvailable = ({
+    appointments = [],
+    time,
+  }: {
+    appointments: IAppointment[];
+    time: string;
+  }) => {
+    return appointments.some((appointment) => {
+      const { appointment_time } = appointment;
+      const appointmentHour = appointment_time.split(":")[0];
+      return appointmentHour === time.split(":")[0];
+    });
   };
 
   return (
@@ -143,79 +302,21 @@ const EditPatientPage = () => {
             <SheetHeader>
               <SheetTitle>Select Doctor</SheetTitle>
             </SheetHeader>
-
             <div className="grid gap-4 overflow-auto py-4">
-              {doctors.map((doc, index) => (
-                <Card key={index}>
-                  <CardHeader>
-                    <CardTitle>{doc.name}</CardTitle>
-
-                    <CardDescription>
-                      <Badge className="bg-yellow-400 text-black">
-                        <Star />
-                        {doc.experience_years}
-                      </Badge>
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent>
-                    <div className="flex gap-2">
-                      <span>specialties:</span>
-                      <div className="grid gap-1">
-                        {doc.specialty.map((skill, index) => (
-                          <Badge key={index} variant="outline">
-                            {skill}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-
-                  <CardFooter>
-                    <Button
-                      disabled={doc.id === selectedDoctor?.id}
-                      type="button"
-                      onClick={() => {
-                        BookDoctor(doc);
-                      }}
-                    >
-                      Book
-                    </Button>
-                  </CardFooter>
-                </Card>
+              {doctors.map((doc) => (
+                <DoctorCard
+                  key={doc.id}
+                  doctor={doc}
+                  selectedDoctorId={selectedDoctor?.id}
+                  onSelect={() => handleSelectDoctor(doc)}
+                />
               ))}
             </div>
           </SheetContent>
         </Sheet>
       </div>
 
-      {selectedDoctor && (
-        <Card className="w-sm">
-          <CardHeader>
-            <CardTitle>{selectedDoctor.name}</CardTitle>
-
-            <CardDescription>
-              <Badge className="bg-yellow-400 text-black">
-                <Star />
-                {selectedDoctor.experience_years}
-              </Badge>
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <div className="flex gap-2">
-              <span>specialties:</span>
-              <div className="grid-cols-auto grid gap-1">
-                {selectedDoctor.specialty.map((skill, index) => (
-                  <Badge key={index} variant="outline">
-                    {skill}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {selectedDoctor && <SelectedDoctorCard doctor={selectedDoctor} />}
 
       {selectedDoctor && (
         <>
@@ -223,7 +324,7 @@ const EditPatientPage = () => {
             <Popover open={openCalendar}>
               <PopoverTrigger asChild>
                 <Button
-                  variant={"outline"}
+                  variant="outline"
                   className={cn(
                     "w-[280px] justify-start text-left font-normal",
                     !date && "text-muted-foreground",
@@ -250,50 +351,18 @@ const EditPatientPage = () => {
 
           <div className="grid w-full grid-cols-2 gap-5">
             {shifts.map((shift, index) => (
-              <Dialog key={index}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" key={index}>
-                    {shift.title}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Are you sure?</DialogTitle>
-                    <DialogDescription>
-                      You are booking an appointment with{" "}
-                      <span className="mx-2 font-bold text-blue-700">
-                        {"Dr John"}
-                      </span>
-                      for
-                      <span className="mx-2 font-black">{"9 P.M."}</span>
-                    </DialogDescription>
-                  </DialogHeader>
-
-                  <DialogFooter className="sm:justify-start">
-                    <DialogClose asChild>
-                      <Button type="button" variant="outline">
-                        Close
-                      </Button>
-                    </DialogClose>
-
-                    <DialogClose asChild>
-                      <Button type="button">Confirm</Button>
-                    </DialogClose>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <ShiftBookingButton
+                key={index}
+                doctor={selectedDoctor}
+                shift={shift}
+                date={date}
+                disabled={IsAppointmentAvailable({
+                  appointments,
+                  time: shift.time,
+                })}
+              />
             ))}
           </div>
-
-          {/* <div className="grid w-1/2 grid-cols-2 gap-5">
-            <Button variant="outline" asChild>
-              <Link href="/receptionist/appointments">Confirm</Link>
-            </Button>
-
-            <Button variant="outline" asChild>
-              <Link href="/receptionist/make_appointment">Cancel</Link>
-            </Button>
-          </div> */}
         </>
       )}
     </section>

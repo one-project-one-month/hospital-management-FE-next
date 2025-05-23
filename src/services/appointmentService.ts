@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAxiosInstance } from "@/lib/axios";
 import { handleHttpError } from "@/lib/httpError";
-import { IAppointmentResponse } from "@/types";
-
-// {
-//   doctor_id :'string',
-//   date: 'toISOString'
-// }
+import { IAppointmentCreateRequest, IAppointmentResponse } from "@/types";
 
 class AppointmentService {
   async getAppointmentByDoctorId({
@@ -18,17 +13,26 @@ class AppointmentService {
   }): Promise<IAppointmentResponse> {
     const axios = await getAxiosInstance();
 
-    console.log({
-      doctor_id,
-      date,
-    });
-
     try {
-      const response = await axios.get<IAppointmentResponse>("/appointment", {
+      const response = await axios.get<IAppointmentResponse>("/appointments", {
         params: {
           doctor_id,
           appointment_date: date,
         },
+      });
+      return response.data;
+    } catch (error: any) {
+      handleHttpError(error);
+    }
+  }
+
+  async createAppointment(data: IAppointmentCreateRequest): Promise<any> {
+    const axios = await getAxiosInstance();
+    console.log(data);
+
+    try {
+      const response = await axios.post<any>("/appointments/receptionist", {
+        ...data,
       });
       return response.data;
     } catch (error: any) {
