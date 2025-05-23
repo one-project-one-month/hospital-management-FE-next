@@ -21,7 +21,7 @@ const AppointmentsPage = () => {
     <section>
       <Tabs defaultValue="current" className="grid w-full gap-5">
         <TabsList>
-          <TabsTrigger value="current">Current Appointments</TabsTrigger>
+          <TabsTrigger value="current">Today Appointments</TabsTrigger>
           <TabsTrigger value="appointment"> Appointments</TabsTrigger>
         </TabsList>
 

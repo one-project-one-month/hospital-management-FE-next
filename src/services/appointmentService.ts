@@ -28,7 +28,6 @@ class AppointmentService {
 
   async createAppointment(data: IAppointmentCreateRequest): Promise<any> {
     const axios = await getAxiosInstance();
-    console.log(data);
 
     try {
       const response = await axios.post<any>("/appointments/receptionist", {

@@ -20,3 +20,4 @@ export * from "./sonner";
 export * from "./tabs";
 export * from "./popover";
 export * from "./calendar";
+export * from "./textarea";

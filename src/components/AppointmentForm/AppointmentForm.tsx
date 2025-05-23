@@ -17,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Textarea,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -138,6 +139,7 @@ const ShiftBookingButton = ({
   date: Date;
 }) => {
   const searchParams = useSearchParams();
+  const [note, setNote] = useState<string>("");
 
   const handleCreateAppointment = async () => {
     const id = searchParams.get("id");
@@ -148,7 +150,7 @@ const ShiftBookingButton = ({
       doctor_profile_id: doctor.id || "",
       appointment_date: newDate,
       appointment_time: shift.time,
-      notes: "a test note",
+      notes: note,
     };
 
     const result = await createAppointment({ ...data });
@@ -191,6 +193,21 @@ const ShiftBookingButton = ({
             <span className="mx-2 font-black">{shift.title}</span>
           </DialogDescription>
         </DialogHeader>
+
+        {/* Body */}
+        <div className="w-full">
+          <div className="w-full">
+            <label htmlFor="email" className="text-sm font-medium">
+              Note
+            </label>
+            <Textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Type your note here."
+            />
+          </div>
+        </div>
+
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>
             <Button type="button" variant="outline">
