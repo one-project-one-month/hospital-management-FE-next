@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAxiosInstance } from "@/lib/axios";
+import { handleHttpError } from "@/lib/httpError";
 import { LoginRequest, LoginResponse } from "@/types";
 
 class AuthService {
@@ -10,14 +11,18 @@ class AuthService {
       const response = await axios.post<LoginResponse>("/auth/login", data);
       return response.data;
     } catch (error) {
-      throw new Error("Login failed");
+      handleHttpError(error);
     }
   }
 
   // Add other methods here, e.g., logout, getProfile, etc.
   async logout() {
-    const axios = await getAxiosInstance();
-    return axios.post("/auth/logout");
+    try {
+      const axios = await getAxiosInstance();
+      return axios.post("/auth/logout");
+    } catch (error: any) {
+      handleHttpError(error);
+    }
   }
 }
 

@@ -9,15 +9,15 @@ import {
 } from "@/components";
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
-import { Home, Inbox } from "lucide-react";
+import { Inbox } from "lucide-react";
 import Link from "next/link";
 
 const items = [
-  {
-    title: "Dashboard",
-    url: "/admin/dashboard",
-    icon: Home,
-  },
+  // {
+  //   title: "Dashboard",
+  //   url: "/admin/dashboard",
+  //   icon: Home,
+  // },
   {
     title: "Doctor",
     url: "/admin/doctor",

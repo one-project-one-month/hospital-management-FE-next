@@ -44,9 +44,13 @@ export async function login(prevState: any, formData: FormData) {
 export async function logout() {
   try {
     await authService.logout();
+  } catch (error) {
+    console.log("Logout Error:", error);
+  }
+
+  try {
     await deleteSession();
   } catch (error) {
-    console.log("Logout Error");
-    return;
+    console.log("Session Deletion Error:", error);
   }
 }

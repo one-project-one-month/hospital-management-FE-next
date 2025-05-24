@@ -6,6 +6,7 @@ export * from "./DoctorForm/DoctorForm";
 export * from "./ReceptionistForm/ReceptionistForm";
 export * from "./DoctorTable/DoctorTable";
 export * from "./PatientTable/PatientTable";
+export * from "./AppointmentForm/AppointmentForm";
 
 export * from "./Navbar";
 export * from "./AppSidebar";

@@ -11,7 +11,6 @@ import {
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import {
-  Home,
   Inbox,
   Calendar,
   Search,
@@ -21,11 +20,11 @@ import {
 import Link from "next/link";
 
 const items = [
-  {
-    title: "Dashboard",
-    url: "/receptionist/dashboard",
-    icon: Home,
-  },
+  // {
+  //   title: "Dashboard",
+  //   url: "/receptionist/dashboard",
+  //   icon: Home,
+  // },
   {
     title: "Inventory",
     url: "/receptionist/inventory",

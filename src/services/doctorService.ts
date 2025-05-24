@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAxiosInstance } from "@/lib/axios";
-import { handleHttpError, HttpError } from "@/lib/httpError";
+import { handleHttpError } from "@/lib/httpError";
 import { IDoctor, IDoctorResponse } from "@/types";
 
 interface ICreateDoctorResponse {
@@ -26,7 +26,18 @@ class DoctorService {
     try {
       const response = await axios.post<ICreateDoctorResponse>(
         "/admin/createDoctor",
-        data,
+        {
+          ...data,
+          availability: {
+            Mon: ["09:00", "11:00", "13:00", "15:00"],
+            Tue: ["09:00", "11:00", "13:00", "15:00"],
+            Wed: ["09:00", "11:00", "13:00", "15:00"],
+            Thu: ["09:00", "11:00", "13:00", "15:00"],
+            Fri: ["09:00", "11:00", "13:00", "15:00"],
+            Sat: ["09:00", "11:00", "13:00", "15:00"],
+            Sun: ["09:00", "11:00", "13:00", "15:00"],
+          },
+        },
       );
       return response.data;
     } catch (error: any) {
@@ -36,4 +47,3 @@ class DoctorService {
 }
 
 export const doctorService = new DoctorService();
-export { HttpError };

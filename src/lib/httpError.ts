@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 export class HttpError extends Error {
   status?: number;
   data?: any;
