@@ -2,7 +2,6 @@
 "use server";
 
 import { doctorService, appointmentService } from "@/services";
-import { IAppointmentCreateRequest } from "@/types";
 
 export async function getDoctors() {
   try {
@@ -28,20 +27,6 @@ export async function getAppointmentData({
     });
 
     return { data: data.appointment, success: true };
-  } catch (error) {
-    return { success: false, error: "Something went wrong" };
-  }
-}
-
-export async function createAppointment(
-  appointmentData: IAppointmentCreateRequest,
-) {
-  try {
-    const { data } = await appointmentService.createAppointment({
-      ...appointmentData,
-    });
-
-    return { data, success: true };
   } catch (error) {
     return { success: false, error: "Something went wrong" };
   }

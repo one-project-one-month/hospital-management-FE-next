@@ -34,7 +34,7 @@ import {
   Star,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { addDays, format, isAfter, isBefore, startOfDay } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 import { cn } from "@/lib/utils";
 import { IAppointment, IDoctor } from "@/types";
 import { getDoctors, getAppointmentData, createAppointment } from "./actions";
@@ -42,9 +42,7 @@ import { useDispatch } from "react-redux";
 import { storeDoctor } from "@/redux/doctorSlice";
 import { toast } from "sonner";
 import { redirect, useSearchParams } from "next/navigation";
-
-const today = startOfDay(new Date());
-const maxDate = addDays(today, 6);
+import { today, maxDate } from "@/constants";
 
 type Shift = {
   time: string;
@@ -243,7 +241,7 @@ export default function AppointmentForm() {
       }
     };
     fetchDoctors();
-  }, [dispatch]);
+  }, [dispatch, setDoctors]);
 
   useEffect(() => {
     const fetchAppointments = async () => {

@@ -30,7 +30,7 @@ class AppointmentService {
     const axios = await getAxiosInstance();
 
     try {
-      const response = await axios.post<any>("/appointments/receptionist", {
+      const response = await axios.post<any>(`/appointments/receptionist`, {
         ...data,
       });
       return response.data;
