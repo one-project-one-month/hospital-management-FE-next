@@ -7,6 +7,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -128,17 +136,59 @@ const AppointmentTable = ({
               <p>Description:{appointments.notes}</p>
             </CardContent>
 
-            <CardFooter className="flex flex-col gap-2">
-              <div className="flex gap-2">
-                <Button variant="destructive">medical record</Button>
-                <Button variant="destructive">Lab res</Button>
-              </div>
+            <CardFooter className="flex gap-2">
+              {tab !== "default" && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button>Mark as Complete</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
+                      </DialogDescription>
+                    </DialogHeader>
 
-              <div className="flex gap-2">
-                {tab !== "default" && <Button>Mark as Complete</Button>}
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button variant="destructive">Yes</Button>
+                      </DialogClose>
 
-                <Button variant="destructive">Delete</Button>
-              </div>
+                      <DialogClose asChild>
+                        <Button>Cancel</Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              )}
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive">Cancel</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="destructive">Yes</Button>
+                    </DialogClose>
+
+                    <DialogClose asChild>
+                      <Button>Cancel</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </CardFooter>
           </Card>
         ))}
