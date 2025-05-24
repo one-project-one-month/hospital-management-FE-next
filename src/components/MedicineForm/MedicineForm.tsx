@@ -15,11 +15,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-
-import { toast } from "sonner";
 import { formSchema } from "./schema";
 import { createMedicine } from "./actions";
 import { redirect } from "next/navigation";
+import { ErrorToast, SuccessToast } from "@/lib/toast";
 
 export function MedicineForm() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,20 +34,10 @@ export function MedicineForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await createMedicine(values);
     if (result.success) {
-      toast.success("Medicine created", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
-      });
+      SuccessToast("Medicine created");
       redirect("/receptionist/medicine");
     } else {
-      toast.error(result.error || "Error creating medicine", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+      ErrorToast(result.error || "Error creating medicine");
     }
   }
 

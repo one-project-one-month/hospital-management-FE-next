@@ -40,9 +40,9 @@ import { IAppointment, IDoctor } from "@/types";
 import { getDoctors, getAppointmentData, createAppointment } from "./actions";
 import { useDispatch } from "react-redux";
 import { storeDoctor } from "@/redux/doctorSlice";
-import { toast } from "sonner";
 import { redirect, useSearchParams } from "next/navigation";
 import { today, maxDate } from "@/constants";
+import { ErrorToast, SuccessToast } from "@/lib/toast";
 
 type Shift = {
   time: string;
@@ -153,20 +153,10 @@ const ShiftBookingButton = ({
 
     const result = await createAppointment({ ...data });
     if (result.success) {
-      toast.success("Appointment created", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
-      });
+      SuccessToast("Appointment created");
       redirect("/receptionist/appointments");
     } else {
-      toast.error(result.error || "Error creating appointment", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+      ErrorToast(result.error || "Error creating appointment");
     }
   };
 

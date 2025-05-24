@@ -18,11 +18,10 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff, Plus, Trash2 } from "lucide-react";
-
-import { toast } from "sonner";
 import { formSchema } from "./schema";
 import { createDoctor } from "./actions";
 import { redirect } from "next/navigation";
+import { ErrorToast, SuccessToast } from "@/lib/toast";
 
 export function DoctorForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -64,21 +63,11 @@ export function DoctorForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await createDoctor(values);
     if (result.success) {
-      toast.success("Doctor created", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
-      });
+      SuccessToast("Doctor created");
 
       redirect("/admin/doctor");
     } else {
-      toast.error(result.error || "Error creating doctor", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+      ErrorToast(result.error || "Error creating doctor");
     }
   }
 
