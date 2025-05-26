@@ -7,5 +7,8 @@ export const formSchema = z.object({
   stock: z.number().min(1, {
     message: "stock must be at least 1 characters.",
   }),
-  expired: z.string().nonempty(),
+  price: z.number().min(1, {
+    message: "price must be at least 1 characters.",
+  }),
+  expired_at: z.string().nonempty(),
 });

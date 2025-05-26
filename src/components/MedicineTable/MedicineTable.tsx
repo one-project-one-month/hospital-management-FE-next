@@ -38,6 +38,8 @@ import Link from "next/link";
 import { getMedicines } from "./actions";
 import { useEffect, useState } from "react";
 import { IMedicine } from "@/types";
+import { useDispatch } from "react-redux";
+import { storeMedicine } from "@/redux/medicineSlice";
 
 const columns: ColumnDef<IMedicine>[] = [
   // Actions
@@ -122,7 +124,7 @@ const columns: ColumnDef<IMedicine>[] = [
     },
   },
   {
-    accessorKey: "expired",
+    accessorKey: "expired_at",
     header: ({ column }) => {
       return (
         <Button
@@ -135,7 +137,7 @@ const columns: ColumnDef<IMedicine>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div className="flex gap-2">{row.getValue("expired")}</div>;
+      return <div className="flex gap-2">{row.getValue("expired_at")}</div>;
     },
   },
   {
@@ -158,6 +160,7 @@ const columns: ColumnDef<IMedicine>[] = [
 ];
 
 export default function MedicineTable() {
+  const dispatch = useDispatch();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -187,6 +190,7 @@ export default function MedicineTable() {
     const fetchMedicines = async () => {
       try {
         const { data } = await getMedicines();
+        dispatch(storeMedicine(data || []));
         setMedicines(data || []);
       } catch (error) {
         console.error("Failed to fetch medicines:", error);
@@ -194,7 +198,7 @@ export default function MedicineTable() {
     };
 
     fetchMedicines();
-  }, [setMedicines]);
+  }, [setMedicines, dispatch]);
 
   return (
     <div className="w-full">

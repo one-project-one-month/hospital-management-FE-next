@@ -4,12 +4,14 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import authReducer from "./authSlice";
 import patientReducer from "./patientSlice";
 import doctorReducer from "./doctorSlice";
+import medicineReducer from "./medicineSlice";
 
 // Combine reducers if you have multiple slices
 const rootReducer = combineReducers({
   auth: authReducer,
   patients: patientReducer,
   doctors: doctorReducer,
+  medicines: medicineReducer,
 });
 
 // Persist config

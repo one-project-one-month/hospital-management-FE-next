@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,30 +17,87 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { formSchema } from "./schema";
-import { createMedicine } from "./actions";
-import { redirect } from "next/navigation";
+import { createMedicine, updateMedicine } from "./actions";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 import { ErrorToast, SuccessToast } from "@/lib/toast";
+import { Calendar, Popover, PopoverContent, PopoverTrigger } from "../ui";
+import { CalendarIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { today } from "@/constants";
+import { addDays, format } from "date-fns";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+
+const default_expired = addDays(today, 365);
 
 export function MedicineForm() {
+  const [date, setDate] = useState<Date>(default_expired);
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const medicinesData = useSelector(
+    (state: RootState) => state.medicines.medicines,
+  );
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       stock: 1,
-      expired: "", //! Need to add today date
+      price: 1,
+      expired_at: format(default_expired, "yyyy-MM-dd"),
     },
     mode: "onChange",
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const result = await createMedicine(values);
-    if (result.success) {
-      SuccessToast("Medicine created");
-      redirect("/receptionist/medicine");
-    } else {
-      ErrorToast(result.error || "Error creating medicine");
+    if (pathname.includes("/create")) {
+      const result = await createMedicine(values);
+      if (result.success) {
+        SuccessToast("Medicine created");
+        redirect("/receptionist/medicine");
+      } else {
+        ErrorToast(result.error || "Error creating medicine");
+      }
+    } else if (pathname.includes("/edit")) {
+      const id = searchParams.get("id");
+      const result = await updateMedicine({ values, id });
+      if (result.success) {
+        SuccessToast("Medicine updated");
+        redirect("/receptionist/medicine");
+      } else {
+        ErrorToast(result.error || "Error updating medicine");
+      }
     }
   }
+
+  const handleSelectDate = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      setDate(selectedDate);
+      setOpenCalendar(false);
+
+      const newDate = format(selectedDate, "yyyy-MM-dd");
+      form.setValue("expired_at", newDate);
+    }
+  };
+
+  useEffect(() => {
+    const id = searchParams.get("id");
+
+    if (!id || !pathname.includes("/edit")) return;
+
+    const editData = medicinesData?.find((med) => med.id == id);
+    if (!editData) return;
+
+    const { expired_at } = editData;
+
+    if (editData) {
+      form.reset({
+        ...editData,
+        expired_at: expired_at || format(default_expired, "yyyy-MM-dd"),
+      });
+    }
+  }, [pathname, searchParams, medicinesData, form]);
 
   return (
     <Form {...form}>
@@ -62,7 +120,27 @@ export function MedicineForm() {
           )}
         />
 
-        {/* Name */}
+        {/* Price */}
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>stock</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min="1"
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Stock */}
         <FormField
           control={form.control}
           name="stock"
@@ -70,22 +148,45 @@ export function MedicineForm() {
             <FormItem>
               <FormLabel>stock</FormLabel>
               <FormControl>
-                <Input type="number" min={1} {...field} />
+                <Input
+                  type="number"
+                  min="1"
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Name */}
+        {/* Expired */}
         <FormField
           control={form.control}
-          name="expired"
+          name="expired_at"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Expired Date</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Popover open={openCalendar}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      onClick={() => setOpenCalendar(!openCalendar)}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={handleSelectDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </FormControl>
               <FormMessage />
             </FormItem>

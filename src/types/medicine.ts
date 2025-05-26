@@ -4,9 +4,12 @@ export interface IMedicine {
   id?: string;
   name: string;
   stock: number;
-  expired: string;
+  price: number;
+  expired_at: string;
 }
 
 export interface IMedicineResponse extends IBaseResponse {
-  data: IMedicine[];
+  data: {
+    medicine: IMedicine[];
+  };
 }
