@@ -108,7 +108,7 @@ export function PatientTable() {
     const fetchDoctors = async () => {
       try {
         const { data } = await getPatients();
-        const patientData = data?.patients || [];
+        const patientData = data || [];
         dispatch(storePatient(patientData));
         setPatient(patientData);
       } catch (error) {

@@ -26,43 +26,49 @@ import {
 } from "../ui";
 import { useEffect, useState } from "react";
 
-import { IAppointment, IDoctor } from "@/types";
+import { IAppointment, IDoctor, IPatient } from "@/types";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, XIcon } from "lucide-react";
 import { today } from "@/constants";
 import { getAppointmentData } from "./actions";
 
 const AppointmentTable = ({
   tab,
   doctors,
+  patients,
 }: {
   tab: "today" | "default";
   doctors: IDoctor[];
+  patients: IPatient[];
 }) => {
-  const [date, setDate] = useState<Date>(today);
+  const [date, setDate] = useState<Date | undefined>(
+    tab === "today" ? today : undefined,
+  );
   const [openCalendar, setOpenCalendar] = useState(false);
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
-  const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | undefined>();
+  const [selectedDoctor, setSelectedDoctor] = useState<string | undefined>();
+  const [selectedPatient, setSelectedPatient] = useState<string | undefined>();
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const formattedDate = format(date, "yyyy-MM-dd");
+        const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
         const { data } = await getAppointmentData({
           date: formattedDate,
-          doctor_id: selectedDoctor?.id || "",
+          doctor_id: selectedDoctor || "",
+          patient_profile_id: selectedPatient || "",
+          status: "pending",
         });
-
-        console.log(data);
 
         setAppointments(data || []);
       } catch (error) {
         console.error("Failed to fetch appointments:", error);
       }
     };
+
     fetchAppointments();
-  }, [date, selectedDoctor?.id, setAppointments, setSelectedDoctor]);
+  }, [date, selectedDoctor, selectedPatient]);
 
   const handleSelectDate = (selectedDate: Date | undefined) => {
     if (selectedDate) {
@@ -71,11 +77,19 @@ const AppointmentTable = ({
     }
   };
 
+  const clearDate = () => {
+    setDate(undefined);
+  };
+
   return (
     <>
       <div className="flex w-full gap-2">
         {/* Doctor */}
-        <Select>
+        <Select
+          onValueChange={(value) => {
+            setSelectedDoctor(value);
+          }}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select Doctor" />
           </SelectTrigger>
@@ -89,22 +103,55 @@ const AppointmentTable = ({
           </SelectContent>
         </Select>
 
+        {/* Patient */}
+        <Select
+          onValueChange={(value) => {
+            setSelectedPatient(value);
+          }}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Patient" />
+          </SelectTrigger>
+
+          <SelectContent>
+            {patients.map((patient, index) => (
+              <SelectItem key={index} value={patient.id || ""}>
+                {patient.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         {/* Date */}
         {tab === "default" && (
-          <Popover open={openCalendar}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-[280px] justify-start text-left font-normal",
-                  !date && "text-muted-foreground",
-                )}
-                onClick={() => setOpenCalendar(!openCalendar)}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
+          <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
+            <div className="relative">
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-[280px] justify-start pr-10 text-left font-normal",
+                    !date && "text-muted-foreground",
+                  )}
+                  onClick={() => setOpenCalendar(!openCalendar)}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+
+              {date && (
+                <Button
+                  variant="ghost"
+                  onClick={clearDate}
+                  size="icon"
+                  className="text-muted-foreground absolute top-1/2 right-3 z-10 h-4 w-4 -translate-y-1/2 cursor-pointer"
+                >
+                  <XIcon />
+                </Button>
+              )}
+            </div>
+
             <PopoverContent className="w-auto p-0">
               <Calendar
                 mode="single"
