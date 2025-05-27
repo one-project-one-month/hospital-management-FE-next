@@ -33,7 +33,6 @@ export async function getAppointmentData({
   }
 }
 
-// TODO:
 export async function createAppointment(
   appointmentData: IAppointmentCreateRequest,
 ) {

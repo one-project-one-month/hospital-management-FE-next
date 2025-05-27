@@ -24,14 +24,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { IAppointment, IDoctor, IPatient } from "@/types";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, XIcon } from "lucide-react";
 import { today } from "@/constants";
-import { getAppointmentData } from "./actions";
+import {
+  cancelAppointment,
+  confirmAppointment,
+  getAppointmentData,
+} from "./actions";
+import { ErrorToast, SuccessToast } from "@/lib/toast";
 
 const AppointmentTable = ({
   tab,
@@ -45,30 +50,47 @@ const AppointmentTable = ({
   const [date, setDate] = useState<Date | undefined>(
     tab === "today" ? today : undefined,
   );
+  const [openDialog, setOpenDialog] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
   const [selectedDoctor, setSelectedDoctor] = useState<string | undefined>();
   const [selectedPatient, setSelectedPatient] = useState<string | undefined>();
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
-        const { data } = await getAppointmentData({
-          date: formattedDate,
-          doctor_id: selectedDoctor || "",
-          patient_profile_id: selectedPatient || "",
-          status: "pending",
-        });
+  const fetchAppointments = useCallback(async () => {
+    try {
+      const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
+      const { data } = await getAppointmentData({
+        date: formattedDate,
+        doctor_id: selectedDoctor || "",
+        patient_profile_id: selectedPatient || "",
+        status: "pending",
+      });
 
-        setAppointments(data || []);
-      } catch (error) {
-        console.error("Failed to fetch appointments:", error);
-      }
-    };
-
-    fetchAppointments();
+      setAppointments(data || []);
+      console.log(data);
+    } catch (error) {
+      console.error("Failed to fetch appointments:", error);
+    }
   }, [date, selectedDoctor, selectedPatient]);
+
+  const onCancel = useCallback(
+    async (id: string) => {
+      try {
+        await cancelAppointment(id);
+        SuccessToast("Appointment cancelled.");
+        await fetchAppointments(); // ✅ refetch after successful cancel
+      } catch (error) {
+        console.error("Failed to cancel appointment:", error);
+        ErrorToast("Failed to cancel appointment.");
+      }
+      setOpenDialog(false);
+    },
+    [fetchAppointments],
+  );
+
+  useEffect(() => {
+    fetchAppointments();
+  }, [fetchAppointments]);
 
   const handleSelectDate = (selectedDate: Date | undefined) => {
     if (selectedDate) {
@@ -79,6 +101,18 @@ const AppointmentTable = ({
 
   const clearDate = () => {
     setDate(undefined);
+  };
+
+  const onConfirm = async (id: string) => {
+    // TODO
+    // try {
+    //   await confirmAppointment(id);
+    //   SuccessToast("Appointment Confirmed.");
+    // } catch (error) {
+    //   console.error("Failed to confirm appointment:", error);
+    //   ErrorToast("Appointment fail to confirm.");
+    // }
+    // setOpenDialog(false);
   };
 
   return (
@@ -165,47 +199,51 @@ const AppointmentTable = ({
       </div>
 
       <div className="grid w-full grid-cols-2 gap-5">
-        {appointments.map((appointments, index) => (
+        {appointments.map((appointment, index) => (
           <Card
             key={
-              appointments.appointment_date +
+              appointment.appointment_date +
               index +
-              appointments.appointment_time
+              appointment.appointment_time
             }
           >
             <CardHeader>
-              <CardTitle>{appointments.appointment_date}</CardTitle>
-              <CardTitle>{appointments.appointment_time}</CardTitle>
+              <CardTitle>{appointment.appointment_date}</CardTitle>
+              <CardTitle>{appointment.appointment_time}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>Doctor: {appointments.doctor?.name}</p>
-              <p>patient: {appointments.patient_profile_name}</p>
-              <p>Description:{appointments.notes}</p>
+              <p>Doctor: {appointment.doctor?.name}</p>
+              <p>patient: {appointment.patient_profile_name}</p>
+              <p>Description:{appointment.notes}</p>
             </CardContent>
 
             <CardFooter className="flex gap-2">
               {tab !== "default" && (
-                <Dialog>
+                <Dialog open={openDialog} onOpenChange={setOpenDialog}>
                   <DialogTrigger asChild>
-                    <Button>Mark as Complete</Button>
+                    <Button>Mark as Confirm</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogTitle>Create Treatment</DialogTitle>
                       <DialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
+                        Please create treatment before confirm.
                       </DialogDescription>
                     </DialogHeader>
+                    {/* TODO */}
+                    <div className="grid gap-2">form</div>
 
                     <DialogFooter>
-                      <DialogClose asChild>
-                        <Button variant="destructive">Yes</Button>
-                      </DialogClose>
+                      <Button
+                        type="button"
+                        onClick={() => onConfirm(appointment.id || "")}
+                        variant="default"
+                      >
+                        Confirm
+                      </Button>
 
                       <DialogClose asChild>
-                        <Button>Cancel</Button>
+                        <Button variant="secondary">Cancel</Button>
                       </DialogClose>
                     </DialogFooter>
                   </DialogContent>
@@ -218,16 +256,21 @@ const AppointmentTable = ({
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogTitle>Are you sure?</DialogTitle>
                     <DialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
+                      This action cannot be undone.
                     </DialogDescription>
                   </DialogHeader>
 
                   <DialogFooter>
                     <DialogClose asChild>
-                      <Button variant="destructive">Yes</Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => onCancel(appointment.id || "")}
+                      >
+                        Yes
+                      </Button>
                     </DialogClose>
 
                     <DialogClose asChild>

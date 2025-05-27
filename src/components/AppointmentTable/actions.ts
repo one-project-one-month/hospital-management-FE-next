@@ -37,3 +37,23 @@ export async function getAppointmentData({
     return { success: false, error: "Something went wrong" };
   }
 }
+
+export async function confirmAppointment(id: string) {
+  try {
+    const { data } = await appointmentService.confirmAppointment(id);
+
+    return { data: data.appointment, success: true };
+  } catch (error) {
+    return { success: false, error: "Something went wrong" };
+  }
+}
+
+export async function cancelAppointment(id: string) {
+  try {
+    const { data } = await appointmentService.cancelAppointment(id);
+
+    return { data: data.appointment, success: true };
+  } catch (error) {
+    return { success: false, error: "Something went wrong" };
+  }
+}

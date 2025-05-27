@@ -51,7 +51,7 @@ type Shift = {
 
 const shifts: Shift[] = [
   { time: "09:00:00", title: "9 A.M." },
-  { time: "11:00:00", title: "11 A.M." }, // Fixed typo
+  { time: "11:00:00", title: "11 A.M." },
   { time: "13:00:00", title: "1 P.M." },
   { time: "15:00:00", title: "3 P.M." },
 ];
