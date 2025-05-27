@@ -78,7 +78,7 @@ const AppointmentTable = ({
       try {
         await cancelAppointment(id);
         SuccessToast("Appointment cancelled.");
-        await fetchAppointments(); // ✅ refetch after successful cancel
+        await fetchAppointments();
       } catch (error) {
         console.error("Failed to cancel appointment:", error);
         ErrorToast("Failed to cancel appointment.");
@@ -103,17 +103,20 @@ const AppointmentTable = ({
     setDate(undefined);
   };
 
-  const onConfirm = async (id: string) => {
-    // TODO
-    // try {
-    //   await confirmAppointment(id);
-    //   SuccessToast("Appointment Confirmed.");
-    // } catch (error) {
-    //   console.error("Failed to confirm appointment:", error);
-    //   ErrorToast("Appointment fail to confirm.");
-    // }
-    // setOpenDialog(false);
-  };
+  const onConfirm = useCallback(
+    async (id: string) => {
+      try {
+        await confirmAppointment(id);
+        SuccessToast("Appointment Confirmed.");
+        await fetchAppointments();
+      } catch (error) {
+        console.error("Failed to confirm appointment:", error);
+        ErrorToast("Appointment fail to confirm.");
+      }
+      setOpenDialog(false);
+    },
+    [fetchAppointments],
+  );
 
   return (
     <>
