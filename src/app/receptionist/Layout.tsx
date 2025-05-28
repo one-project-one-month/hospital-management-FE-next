@@ -46,7 +46,12 @@ const items = [
     icon: CalendarCheck2,
   },
   {
-    title: "Records",
+    title: "Treatment",
+    url: "/receptionist/treatment",
+    icon: Settings,
+  },
+  {
+    title: "Medical Records",
     url: "/receptionist/records",
     icon: Settings,
   },

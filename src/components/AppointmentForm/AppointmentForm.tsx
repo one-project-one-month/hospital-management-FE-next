@@ -34,17 +34,15 @@ import {
   Star,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { addDays, format, isAfter, isBefore, startOfDay } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 import { cn } from "@/lib/utils";
 import { IAppointment, IDoctor } from "@/types";
 import { getDoctors, getAppointmentData, createAppointment } from "./actions";
 import { useDispatch } from "react-redux";
 import { storeDoctor } from "@/redux/doctorSlice";
-import { toast } from "sonner";
 import { redirect, useSearchParams } from "next/navigation";
-
-const today = startOfDay(new Date());
-const maxDate = addDays(today, 6);
+import { today, maxDate } from "@/constants";
+import { ErrorToast, SuccessToast } from "@/lib/toast";
 
 type Shift = {
   time: string;
@@ -53,7 +51,7 @@ type Shift = {
 
 const shifts: Shift[] = [
   { time: "09:00:00", title: "9 A.M." },
-  { time: "11:00:00", title: "11 A.M." }, // Fixed typo
+  { time: "11:00:00", title: "11 A.M." },
   { time: "13:00:00", title: "1 P.M." },
   { time: "15:00:00", title: "3 P.M." },
 ];
@@ -155,20 +153,10 @@ const ShiftBookingButton = ({
 
     const result = await createAppointment({ ...data });
     if (result.success) {
-      toast.success("Appointment created", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
-      });
+      SuccessToast("Appointment created");
       redirect("/receptionist/appointments");
     } else {
-      toast.error(result.error || "Error creating appointment", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+      ErrorToast(result.error || "Error creating appointment");
     }
   };
 
@@ -243,7 +231,7 @@ export default function AppointmentForm() {
       }
     };
     fetchDoctors();
-  }, [dispatch]);
+  }, [dispatch, setDoctors]);
 
   useEffect(() => {
     const fetchAppointments = async () => {

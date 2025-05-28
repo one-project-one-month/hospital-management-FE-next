@@ -17,11 +17,10 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-
-import { toast } from "sonner";
 import { formSchema } from "./schema";
 import { createReceptionist } from "./actions";
 import { redirect } from "next/navigation";
+import { ErrorToast, SuccessToast } from "@/lib/toast";
 
 export function ReceptionistForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,21 +38,10 @@ export function ReceptionistForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await createReceptionist(values);
     if (result.success) {
-      toast.success("Receptionist created", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
-      });
-
+      SuccessToast("Receptionist created");
       redirect("/admin/receptionist");
     } else {
-      toast.error(result.error || "Error creating receptionist", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+      ErrorToast(result.error || "Error creating receptionist");
     }
   }
 

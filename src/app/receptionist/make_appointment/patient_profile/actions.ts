@@ -26,10 +26,8 @@ export async function getAppointmentData({
       doctor_id,
       date,
     });
-    const filteredData = data.appointment.filter(
-      (e) => e.status === "pending" || "confirmed",
-    );
-    return { data: filteredData, success: true };
+
+    return { data: data.appointment, success: true };
   } catch (error) {
     return { success: false, error: "Something went wrong" };
   }

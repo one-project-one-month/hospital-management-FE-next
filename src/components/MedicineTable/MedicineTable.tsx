@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, CalendarPlus } from "lucide-react";
+import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,16 +23,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui";
-
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui";
 import Link from "next/link";
+import { getMedicines } from "./actions";
 import { useEffect, useState } from "react";
-import { getPatients } from "./actions";
-import { IPatient } from "@/types";
+import { IMedicine } from "@/types";
 import { useDispatch } from "react-redux";
-import { storePatient } from "@/redux/patientSlice";
+import { storeMedicine } from "@/redux/medicineSlice";
 
-const columns: ColumnDef<IPatient>[] = [
+const columns: ColumnDef<IMedicine>[] = [
+  // Actions
   {
     accessorKey: "actions",
     header: () => <div className="px-4.5 text-left">Actions</div>,
@@ -43,16 +53,54 @@ const columns: ColumnDef<IPatient>[] = [
         <div className="capitalize">
           <Link
             href={{
-              pathname: "/receptionist/make_appointment/patient_profile",
+              pathname: "/receptionist/medicine/edit",
               query: { id: rowData.id },
             }}
           >
             {/* Edit Btn */}
             <Button variant="ghost" className="text-sm">
-              <CalendarPlus />
-              Make an appointment
+              <SquarePen />
+              edit
             </Button>
           </Link>
+
+          {/* Delete Btn */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" className="text-destructive text-sm">
+                <Trash2 /> delete
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+
+              <DialogFooter className="sm:justify-start">
+                <DialogClose asChild>
+                  <Button type="button" variant="default">
+                    Close
+                  </Button>
+                </DialogClose>
+
+                <DialogClose
+                  onClick={() => {
+                    console.log(`${rowData.name} is deleted!`);
+                  }}
+                  asChild
+                >
+                  <Button type="button" variant="destructive">
+                    DELETE
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       );
     },
@@ -75,18 +123,52 @@ const columns: ColumnDef<IPatient>[] = [
       return <div className="flex gap-2">{row.getValue("name")}</div>;
     },
   },
+  {
+    accessorKey: "expired_at",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Expired date
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="flex gap-2">{row.getValue("expired_at")}</div>;
+    },
+  },
+  {
+    accessorKey: "stock",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Stock
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="flex gap-2">{row.getValue("stock")}</div>;
+    },
+  },
 ];
 
-export function PatientTable() {
+export default function MedicineTable() {
+  const dispatch = useDispatch();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [patient, setPatient] = useState<IPatient[]>([]);
-  const dispatch = useDispatch();
+  const [medicines, setMedicines] = useState<IMedicine[]>([]);
 
-  const table = useReactTable({
-    data: patient,
+  const table = useReactTable<IMedicine>({
+    data: medicines,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -105,19 +187,18 @@ export function PatientTable() {
   });
 
   useEffect(() => {
-    const fetchDoctors = async () => {
+    const fetchMedicines = async () => {
       try {
-        const { data } = await getPatients();
-        const patientData = data || [];
-        dispatch(storePatient(patientData));
-        setPatient(patientData);
+        const { data } = await getMedicines();
+        dispatch(storeMedicine(data || []));
+        setMedicines(data || []);
       } catch (error) {
-        console.error("Failed to fetch doctors:", error);
+        console.error("Failed to fetch medicines:", error);
       }
     };
 
-    fetchDoctors();
-  }, [setPatient, dispatch]);
+    fetchMedicines();
+  }, [setMedicines, dispatch]);
 
   return (
     <div className="w-full">

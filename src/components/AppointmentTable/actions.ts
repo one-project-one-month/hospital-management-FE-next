@@ -2,7 +2,6 @@
 "use server";
 
 import { doctorService, appointmentService } from "@/services";
-import { IAppointmentCreateRequest } from "@/types";
 
 export async function getDoctors() {
   try {
@@ -16,34 +15,44 @@ export async function getDoctors() {
 
 export async function getAppointmentData({
   doctor_id,
+  patient_profile_id,
   date,
+  status,
 }: {
   doctor_id: string;
+  patient_profile_id: string;
   date: string;
+  status: "pending" | "confirmed" | "cancelled";
 }) {
   try {
     const { data } = await appointmentService.getAppointmentByDoctorId({
       doctor_id,
+      patient_profile_id,
       date,
+      appointment_status: status,
     });
-    const filteredData = data.appointment.filter(
-      (e) => e.status === "pending" || "confirmed",
-    );
-    return { data: filteredData, success: true };
+
+    return { data: data.appointment, success: true };
   } catch (error) {
     return { success: false, error: "Something went wrong" };
   }
 }
 
-export async function createAppointment(
-  appointmentData: IAppointmentCreateRequest,
-) {
+export async function confirmAppointment(id: string) {
   try {
-    const { data } = await appointmentService.createAppointment({
-      ...appointmentData,
-    });
+    const { data } = await appointmentService.confirmAppointment(id);
 
-    return { data, success: true };
+    return { data: data.appointment, success: true };
+  } catch (error) {
+    return { success: false, error: "Something went wrong" };
+  }
+}
+
+export async function cancelAppointment(id: string) {
+  try {
+    const { data } = await appointmentService.cancelAppointment(id);
+
+    return { data: data.appointment, success: true };
   } catch (error) {
     return { success: false, error: "Something went wrong" };
   }

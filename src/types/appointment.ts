@@ -1,4 +1,4 @@
-import { IBaseResponse } from ".";
+import { IBaseResponse, IDoctor } from ".";
 
 export interface IAppointment {
   doctor_profile_id?: number;
@@ -6,6 +6,9 @@ export interface IAppointment {
   appointment_time: string;
   status: string;
   notes: string;
+  doctor?: IDoctor;
+  patient_profile_name?: string;
+  id?: string;
 }
 
 export interface IAppointmentResponse extends IBaseResponse {
@@ -21,3 +24,5 @@ export interface IAppointmentCreateRequest {
   appointment_time: string;
   notes: string;
 }
+
+// type Status
