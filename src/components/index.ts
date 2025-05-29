@@ -14,3 +14,4 @@ export * from "./AppointmentForm/AppointmentForm";
 export * from "./AppointmentTable/AppointmentTable";
 export * from "./MedicineTable/MedicineTable";
 export * from "./MedicineForm/MedicineForm";
+export * from "./MedicalRecordTable/MedicalRecordTable";

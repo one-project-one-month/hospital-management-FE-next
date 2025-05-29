@@ -11,11 +11,11 @@ import {
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import {
-  Inbox,
   Calendar,
   Search,
-  Settings,
   CalendarCheck2,
+  BookPlus,
+  Syringe,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -26,15 +26,15 @@ const items = [
   //   icon: Home,
   // },
   {
-    title: "Inventory",
-    url: "/receptionist/inventory",
-    icon: Inbox,
-  },
-  {
     title: "Medicine",
     url: "/receptionist/medicine",
     icon: Calendar,
   },
+  // {
+  //   title: "Inventory",
+  //   url: "/receptionist/inventory",
+  //   icon: Inbox,
+  // },
   {
     title: "Apointments",
     url: "/receptionist/appointments",
@@ -48,12 +48,12 @@ const items = [
   {
     title: "Treatment",
     url: "/receptionist/treatment",
-    icon: Settings,
+    icon: Syringe,
   },
   {
     title: "Medical Records",
     url: "/receptionist/records",
-    icon: Settings,
+    icon: BookPlus,
   },
 ];
 
