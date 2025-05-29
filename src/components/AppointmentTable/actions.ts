@@ -25,7 +25,7 @@ export async function getAppointmentData({
   status: "pending" | "confirmed" | "cancelled";
 }) {
   try {
-    const { data } = await appointmentService.getAppointmentByDoctorId({
+    const { data } = await appointmentService.getAppointments({
       doctor_id,
       patient_profile_id,
       date,

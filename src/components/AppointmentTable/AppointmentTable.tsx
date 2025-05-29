@@ -233,8 +233,6 @@ const AppointmentTable = ({
                         Please create treatment before confirm.
                       </DialogDescription>
                     </DialogHeader>
-                    {/* TODO */}
-                    <div className="grid gap-2">form</div>
 
                     <DialogFooter>
                       <Button

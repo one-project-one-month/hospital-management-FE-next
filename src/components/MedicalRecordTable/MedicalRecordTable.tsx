@@ -34,10 +34,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IMedicalRecord } from "@/types";
-import { useDispatch } from "react-redux";
-import { getMedicalRecords } from "./actionts";
 
 const columns: ColumnDef<IMedicalRecord>[] = [
   // Actions
@@ -110,13 +108,15 @@ const columns: ColumnDef<IMedicalRecord>[] = [
   },
 ];
 
-export default function MedicalRecordTable() {
-  const dispatch = useDispatch();
+export default function MedicalRecordTable({
+  medicalRecords = [],
+}: {
+  medicalRecords: IMedicalRecord[];
+}) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [medicalRecords, setMedicalRecords] = useState<IMedicalRecord[]>([]);
 
   const table = useReactTable<IMedicalRecord>({
     data: medicalRecords,
@@ -137,31 +137,15 @@ export default function MedicalRecordTable() {
     },
   });
 
-  useEffect(() => {
-    const fetchMedicalRecords = async () => {
-      try {
-        const { data } = await getMedicalRecords();
-
-        console.log(data);
-
-        setMedicalRecords(data || []);
-      } catch (error) {
-        console.error("Failed to fetch medicalRecords:", error);
-      }
-    };
-
-    fetchMedicalRecords();
-  }, [setMedicalRecords, dispatch]);
-
   return (
     <div className="w-full">
       {/* Filter */}
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter name..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter title..."
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

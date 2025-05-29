@@ -1,5 +1,13 @@
+import MedicalRecordForm from "@/components/MedicalRecordForm/MedicalRecordForm";
+
 const CreateMedicalRecordPage = () => {
-  return <div className="">CreateMedicalRecordPage</div>;
+  return (
+    <section>
+      <div className="w-full">
+        <MedicalRecordForm />
+      </div>
+    </section>
+  );
 };
 
 export default CreateMedicalRecordPage;
