@@ -68,7 +68,6 @@ const RecordsPage = () => {
               <SheetTitle>Select Appointment</SheetTitle>
             </SheetHeader>
             <div className="grid gap-4 overflow-auto py-4">
-              <div>test</div>
               {appointments.map((appointment, index) => (
                 <Card
                   key={
@@ -93,7 +92,7 @@ const RecordsPage = () => {
                         href={{
                           pathname: "/receptionist/records/create",
                           query: {
-                            appointmentId: appointment.id,
+                            appointment_id: appointment.id,
                           },
                         }}
                       >

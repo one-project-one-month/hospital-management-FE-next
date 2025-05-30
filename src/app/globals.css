@@ -145,3 +145,14 @@ button {
 @utility grid-cols-auto {
   @apply grid-cols-[auto_1fr];
 }
+
+/* Universal spinner removal */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

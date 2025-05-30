@@ -1,4 +1,4 @@
-import MedicalRecordForm from "@/components/MedicalRecordForm/MedicalRecordForm";
+import { MedicalRecordForm } from "@/components";
 
 const CreateMedicalRecordPage = () => {
   return (

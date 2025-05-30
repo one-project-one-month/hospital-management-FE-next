@@ -237,7 +237,7 @@ const AppointmentTable = ({
                     <DialogFooter>
                       <Button
                         type="button"
-                        onClick={() => onConfirm(appointment.id || "")}
+                        onClick={() => onConfirm(appointment.id + "" || "")}
                         variant="default"
                       >
                         Confirm
@@ -268,7 +268,7 @@ const AppointmentTable = ({
                       <Button
                         type="button"
                         variant="destructive"
-                        onClick={() => onCancel(appointment.id || "")}
+                        onClick={() => onCancel(appointment.id + "" || "")}
                       >
                         Yes
                       </Button>
