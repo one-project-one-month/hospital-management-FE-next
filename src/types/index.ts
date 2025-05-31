@@ -5,6 +5,7 @@ export * from "./patient";
 export * from "./appointment";
 export * from "./medicine";
 export * from "./medical-record";
+export * from "./treatment";
 
 export interface IBaseResponse {
   status: string;

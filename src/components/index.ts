@@ -16,3 +16,5 @@ export * from "./MedicineTable/MedicineTable";
 export * from "./MedicineForm/MedicineForm";
 export * from "./MedicalRecordTable/MedicalRecordTable";
 export * from "./MedicalRecordForm/MedicalRecordForm";
+export * from "./TreatmentTable/TreatmentTable";
+export * from "./TreatmentForm/TreatmentForm";
