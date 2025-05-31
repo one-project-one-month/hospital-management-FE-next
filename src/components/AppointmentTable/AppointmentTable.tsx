@@ -233,13 +233,11 @@ const AppointmentTable = ({
                         Please create treatment before confirm.
                       </DialogDescription>
                     </DialogHeader>
-                    {/* TODO */}
-                    <div className="grid gap-2">form</div>
 
                     <DialogFooter>
                       <Button
                         type="button"
-                        onClick={() => onConfirm(appointment.id || "")}
+                        onClick={() => onConfirm(appointment.id + "" || "")}
                         variant="default"
                       >
                         Confirm
@@ -270,7 +268,7 @@ const AppointmentTable = ({
                       <Button
                         type="button"
                         variant="destructive"
-                        onClick={() => onCancel(appointment.id || "")}
+                        onClick={() => onCancel(appointment.id + "" || "")}
                       >
                         Yes
                       </Button>

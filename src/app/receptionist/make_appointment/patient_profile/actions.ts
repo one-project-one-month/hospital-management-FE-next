@@ -22,7 +22,7 @@ export async function getAppointmentData({
   date: string;
 }) {
   try {
-    const { data } = await appointmentService.getAppointmentByDoctorId({
+    const { data } = await appointmentService.getAppointments({
       doctor_id,
       date,
     });

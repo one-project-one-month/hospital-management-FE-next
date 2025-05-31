@@ -8,7 +8,7 @@ export interface IAppointment {
   notes: string;
   doctor?: IDoctor;
   patient_profile_name?: string;
-  id?: string;
+  id?: number;
 }
 
 export interface IAppointmentResponse extends IBaseResponse {

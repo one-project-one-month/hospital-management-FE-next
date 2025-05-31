@@ -4,7 +4,7 @@ import { handleHttpError } from "@/lib/httpError";
 import { IAppointmentCreateRequest, IAppointmentResponse } from "@/types";
 
 class AppointmentService {
-  async getAppointmentByDoctorId({
+  async getAppointments({
     doctor_id,
     patient_profile_id,
     date,

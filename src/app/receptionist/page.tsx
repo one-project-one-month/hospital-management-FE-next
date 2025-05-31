@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 const ReceptionistPage = () => {
-  redirect("/receptionist/inventory");
+  redirect("/receptionist/medicine");
   // return <div className="">ReceptionistPage</div>;
 };
 
