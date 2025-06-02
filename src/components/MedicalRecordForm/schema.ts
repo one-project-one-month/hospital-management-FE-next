@@ -11,7 +11,7 @@ export const formSchema = z.object({
     .array(
       z.object({
         medicine_id: z.string().min(1, "Medicine ID is required"),
-        quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
+        quantity: z.number().min(1, "Quantity ID is required"),
       }),
     )
     .min(1),

@@ -3,12 +3,32 @@
 
 import { z } from "zod";
 import { formSchema } from "./schema"; // move schema to a shared file or adjust import
-import { doctorService } from "@/services";
+import { medicalRecordService, medicineService } from "@/services";
 
-export async function createMedicalRecord(values: z.infer<typeof formSchema>) {
+export async function createMedicalRecord({
+  values,
+  appointmentId,
+}: {
+  values: z.infer<typeof formSchema>;
+  appointmentId: string;
+}) {
   try {
-    // await doctorService.createDoctor(values);
+    await medicalRecordService.createMedicalRecord({
+      data: values,
+      appointmentId,
+    });
     return { success: true };
+  } catch (error) {
+    return { success: false, error: "Something went wrong" };
+  }
+}
+
+export async function getMedicines() {
+  try {
+    const { data } = await medicineService.getMedicines();
+    const { medicine } = data;
+
+    return { data: medicine, success: true };
   } catch (error) {
     return { success: false, error: "Something went wrong" };
   }

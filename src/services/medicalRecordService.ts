@@ -16,13 +16,22 @@ class MedicalRecordService {
     }
   }
 
-  async createMedicalRecord(data: IMedicalRecord): Promise<any> {
+  async createMedicalRecord({
+    data,
+    appointmentId,
+  }: {
+    data: IMedicalRecord;
+    appointmentId: string;
+  }): Promise<any> {
     const axios = await getAxiosInstance();
 
     try {
-      const response = await axios.post<any>("/medicalRecords", {
-        ...data,
-      });
+      const response = await axios.post<any>(
+        `/appointments/${appointmentId}/medical-records`,
+        {
+          ...data,
+        },
+      );
       return response.data;
     } catch (error: any) {
       handleHttpError(error);
