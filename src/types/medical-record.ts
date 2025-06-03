@@ -1,11 +1,11 @@
-import { IAppointment, IBaseResponse, IMedicine } from ".";
+import { IAppointment, IBaseResponse } from ".";
 
 export interface IMedicalRecord {
   record_type_id: string;
   title: string;
   description: string;
   recorded_at: string;
-  medicines: IMedicine[];
+  medicines: Medicine[];
 }
 export interface IMedicalRecordResponse {
   id?: string;
@@ -16,7 +16,12 @@ export interface IMedicalRecordResponse {
   recorded_at: string;
   medicine_price: string;
   appointment: IAppointment;
-  medicines: IMedicine[];
+  medicines: Medicine[];
+}
+
+interface Medicine {
+  medicine_id: string;
+  quantity: number;
 }
 
 export interface IMedicalRecordResponse extends IBaseResponse {

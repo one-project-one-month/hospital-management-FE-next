@@ -16,6 +16,7 @@ import {
   CalendarCheck2,
   BookPlus,
   Syringe,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -41,7 +42,7 @@ const items = [
     icon: Search,
   },
   {
-    title: "Make Apointments",
+    title: "Make Appointments",
     url: "/receptionist/make_appointment",
     icon: CalendarCheck2,
   },
@@ -54,6 +55,11 @@ const items = [
     title: "Medical Records",
     url: "/receptionist/records",
     icon: BookPlus,
+  },
+  {
+    title: "Invoice",
+    url: "/receptionist/records",
+    icon: FileText,
   },
 ];
 
