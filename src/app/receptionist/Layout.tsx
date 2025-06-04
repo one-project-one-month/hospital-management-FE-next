@@ -16,9 +16,9 @@ import {
   CalendarCheck2,
   BookPlus,
   Syringe,
-  FileText,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const items = [
   // {
@@ -56,11 +56,6 @@ const items = [
     url: "/receptionist/records",
     icon: BookPlus,
   },
-  {
-    title: "Invoice",
-    url: "/receptionist/records",
-    icon: FileText,
-  },
 ];
 
 export default function ReceptionistLayout({
@@ -68,33 +63,37 @@ export default function ReceptionistLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathName = usePathname();
+
   return (
     <>
-      <AppSidebar>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                  {item.title === "Inbox" && (
-                    <SidebarMenuBadge>24</SidebarMenuBadge>
-                  )}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </AppSidebar>
+      {!pathName.includes("invoice-print") && (
+        <AppSidebar>
+          <SidebarGroup>
+            <SidebarGroupLabel>Application</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                    {item.title === "Inbox" && (
+                      <SidebarMenuBadge>24</SidebarMenuBadge>
+                    )}
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </AppSidebar>
+      )}
 
       <main className="w-screen">
-        <Navbar />
+        {!pathName.includes("invoice-print") && <Navbar />}
         {children}
       </main>
     </>

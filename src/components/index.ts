@@ -18,3 +18,4 @@ export * from "./MedicalRecordTable/MedicalRecordTable";
 export * from "./MedicalRecordForm/MedicalRecordForm";
 export * from "./TreatmentTable/TreatmentTable";
 export * from "./TreatmentForm/TreatmentForm";
+export * from "./Invoice/Invoice";
