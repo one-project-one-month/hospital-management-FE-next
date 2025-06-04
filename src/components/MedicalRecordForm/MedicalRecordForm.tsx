@@ -66,7 +66,7 @@ export function MedicalRecordForm() {
     if (result.success) {
       SuccessToast("MedicalRecord created");
 
-      redirect("/admin/medicalRecord");
+      redirect("/receptionist/records");
     } else {
       ErrorToast(result.error || "Error creating medicalRecord");
     }

@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, Trash2 } from "lucide-react";
+import { ArrowUpDown, FileSpreadsheet, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +45,10 @@ const columns: ColumnDef<ITreatment>[] = [
     cell: ({ row }) => {
       const rowData = row.original;
 
+      const handlePrint = () => {
+        window.open("/receptionist/treatment/invoice-print", "_blank");
+      };
+
       return (
         <div className="capitalize">
           {/* Delete Btn */}
@@ -54,6 +58,10 @@ const columns: ColumnDef<ITreatment>[] = [
                 <Trash2 /> delete
               </Button>
             </DialogTrigger>
+
+            <Button onClick={handlePrint} variant="ghost" className="text-sm">
+              <FileSpreadsheet /> Generate Invoice
+            </Button>
 
             <DialogContent>
               <DialogHeader>
