@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react";
+import { ArrowUpDown, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +35,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui";
-import Link from "next/link";
 
 const data: Employee[] = [
   { id: 1, name: "Alice Johnson", role: "receptionist" },
@@ -67,18 +66,18 @@ const columns: ColumnDef<Employee>[] = [
 
       return (
         <div className="capitalize">
-          <Link
+          {/* Edit Btn */}
+          {/* <Link
             href={{
               pathname: "/admin/receptionist/edit",
               query: { id: rowData.id },
             }}
           >
-            {/* Edit Btn */}
             <Button variant="ghost" className="text-sm">
               <SquarePen />
               edit
             </Button>
-          </Link>
+          </Link> */}
 
           {/* Delete Btn */}
           <Dialog>
