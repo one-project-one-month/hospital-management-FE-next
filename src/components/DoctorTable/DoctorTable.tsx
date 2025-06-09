@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react";
+import { ArrowUpDown, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui";
-import Link from "next/link";
 import { getDoctors } from "./actions";
 import { useEffect, useState } from "react";
 import { IDoctor } from "@/types";
@@ -49,18 +48,18 @@ export const columns: ColumnDef<IDoctor>[] = [
 
       return (
         <div className="capitalize">
-          <Link
+          {/* Edit Btn */}
+          {/* <Link
             href={{
               pathname: "/admin/doctor/edit",
               query: { id: rowData.id },
             }}
           >
-            {/* Edit Btn */}
             <Button variant="ghost" className="text-sm">
               <SquarePen />
               edit
             </Button>
-          </Link>
+          </Link> */}
 
           {/* Delete Btn */}
           <Dialog>
